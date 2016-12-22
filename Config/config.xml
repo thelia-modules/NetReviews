@@ -20,18 +20,19 @@
         -->
     </commands>
 
-    <!--
     <services>
-
+        <service id="netreviews.order.listener" class="NetReviews\EventListeners\OrderListener">
+            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="request"/>
+        </service>
     </services>
-    -->
 
     <hooks>
         <hook id="netreviews.hook" class="NetReviews\Hook\FrontHook">
             <tag name="hook.event_listener" event="main.footer-bottom" type="front" method="displayFooterLink" />
             <tag name="hook.event_listener" event="main.body-top" type="front" method="displaySiteWidget" />
             <tag name="hook.event_listener" event="product.additional" type="front" method="displayProductTabIframe" />
-
 
             <tag name="hook.event_listener" event="netreviews.tagmanager" type="front" method="displayTag" />
             <tag name="hook.event_listener" event="netreviews.site.widget" type="front" method="displaySiteWidget" />

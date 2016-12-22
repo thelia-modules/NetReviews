@@ -12,7 +12,10 @@
 
 namespace NetReviews;
 
+use NetReviews\Model\NetreviewsOrderQueueQuery;
+use Propel\Runtime\Connection\ConnectionInterface;
 use Thelia\Core\Template\TemplateDefinition;
+use Thelia\Install\Database;
 use Thelia\Module\BaseModule;
 
 class NetReviews extends BaseModule
@@ -20,12 +23,16 @@ class NetReviews extends BaseModule
     /** @var string */
     const DOMAIN_NAME = 'netreviews';
 
-    /*
-     * You may now override BaseModuleInterface methods, such as:
-     * install, destroy, preActivation, postActivation, preDeactivation, postDeactivation
-     *
-     * Have fun !
-     */
+    public function postActivation(ConnectionInterface $con = null)
+    {
+        try {
+            NetreviewsOrderQueueQuery::create()
+                ->find();
+        } catch (\Exception $exception) {
+            $database = new Database($con);
+            $database->insertSql(null, [__DIR__ . "/Config/sql/netreviews_order_queue.sql"]);
+        }
+    }
 
     public function getHooks()
     {
