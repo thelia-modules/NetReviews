@@ -23,6 +23,8 @@
     <services>
         <service id="netreviews.order.listener" class="NetReviews\EventListeners\OrderListener">
             <tag name="kernel.event_subscriber" />
+        </service>
+        <service id="netreviews.order.service" class="NetReviews\Service\OrderService" scope="request">
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="request"/>
         </service>
@@ -38,6 +40,8 @@
             <tag name="hook.event_listener" event="netreviews.site.widget" type="front" method="displaySiteWidget" />
             <tag name="hook.event_listener" event="netreviews.product.iframe" type="front" method="displayProductIframe" />
             <tag name="hook.event_listener" event="netreviews.footer.link" type="front" method="displayFooterLink" />
+
+            <argument type="service" id="netreviews.order.service"/>
         </hook>
     </hooks>
 

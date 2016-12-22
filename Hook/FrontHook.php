@@ -3,6 +3,8 @@
 namespace NetReviews\Hook;
 
 use NetReviews\NetReviews;
+use NetReviews\Object\NetReviewsProduct;
+use NetReviews\Service\OrderService;
 use Propel\Runtime\Connection\ConnectionWrapper;
 use Propel\Runtime\Propel;
 use Thelia\Core\Event\Hook\HookRenderBlockEvent;
@@ -15,61 +17,42 @@ use Thelia\Model\ProductImage;
 
 class FrontHook extends BaseHook
 {
+    /** @var  OrderService */
+    protected $netreviewsOrderService;
+
+    public function __construct(OrderService $netreviewsOrderService)
+    {
+        $this->netreviewsOrderService = $netreviewsOrderService;
+    }
+
     public function displayTag(HookRenderEvent $event)
     {
         $idWebSite = NetReviews::getConfigValue('id_website');
         $secret = NetReviews::getConfigValue('secret_token');
         $order_id = $event->getArgument('order_id');
 
-        /** @var ConnectionWrapper $con */
-        $con = Propel::getConnection();
+        $netreviewsOrder = $this->netreviewsOrderService->getNetreviewsOrder($order_id);
 
-        $orderProductSql = "SELECT o.ref, cu.firstname, cu.lastname, cu.email, op.product_ref, op.title, ru.url, pi.file
-                            FROM order_product op 
-                            LEFT JOIN `order` o ON (op.order_id = o.id)
-                            LEFT JOIN `customer` cu ON (o.customer_id = cu.id)
-                            LEFT JOIN `product` p ON (p.ref = op.product_ref)
-                            LEFT JOIN `rewriting_url` ru ON (p.id = ru.view_id)
-                            LEFT JOIN `product_image` pi ON (p.id = pi.product_id)
-                            WHERE o.id = $order_id
-                            AND ru.view = 'product'
-                            AND ru.redirected IS NULL
-                            AND pi.position = 1
-                            ";
-
-        $stmt = $con->prepare($orderProductSql);
-        $stmt->execute();
-        $results = $stmt->fetchAll();
-
-        $orderRef = $results[0]['ref'];
-        $token = sha1($idWebSite.$secret.$orderRef);
-        $firstname = $results[0]['firstname'];
-        $lastname = $results[0]['lastname'];
-        $email = $results[0]['email'];
-
-        $baseUrl = ConfigQuery::read('url_site');
+        $token = sha1($idWebSite.$secret.$netreviewsOrder->getRef());
 
         $products = [];
 
-        foreach ($results as $orderProduct) {
-            $imageEvent = $this->createProductImageEvent($orderProduct['file']);
-            $event->getDispatcher()->dispatch(TheliaEvents::IMAGE_PROCESS, $imageEvent);
-            $imagePath = $imageEvent->getFileUrl();
-
+        /** @var NetReviewsProduct $product */
+        foreach ($netreviewsOrder->getProducts() as $product) {
             $products[] = [
-                'name_product' => $orderProduct['title'],
-                'id_product' => $orderProduct['product_ref'],
-                'url_product' => $baseUrl."/".$orderProduct['url'],
-                'url_image_product' => $imagePath
+                'name_product' => $product->getName(),
+                'id_product' => $product->getId(),
+                'url_product' => $product->getUrl(),
+                'url_image_product' => $product->getImageUrl()
             ];
         }
 
         $netreviews = [
             "idWebsite" => $idWebSite,
-            "orderRef" => $orderRef,
-            "firstname" => $firstname,
-            "lastname" => $lastname,
-            "email" => $email,
+            "orderRef" => $netreviewsOrder->getRef(),
+            "firstname" => $netreviewsOrder->getFirstname(),
+            "lastname" => $netreviewsOrder->getLastname(),
+            "email" => $netreviewsOrder->getEmail(),
             "products" => $products,
             "token" => $token,
         ];

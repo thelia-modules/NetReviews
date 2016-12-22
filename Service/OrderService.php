@@ -3,6 +3,8 @@
 namespace NetReviews\Service;
 
 use NetReviews\NetReviews;
+use NetReviews\Object\NetReviewsOrder;
+use NetReviews\Object\NetReviewsProduct;
 use Propel\Runtime\Connection\ConnectionWrapper;
 use Propel\Runtime\Propel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -27,19 +29,42 @@ class OrderService
 
     public function sendOrderToNetReviews($orderId)
     {
+        $idWebSite = NetReviews::getConfigValue('id_website');
+        $secret = NetReviews::getConfigValue('secret_token');
+
+        $netreviewsOrder = $this->getNetreviewsOrder($orderId);
+        $products = [];
+
+        /** @var NetReviewsProduct $product */
+        foreach ($netreviewsOrder->getProducts() as $product) {
+            $products[] = [
+                'id_product' => $product->getId(),
+                'name_product' => $product->getName(),
+                'url_product' => $product->getUrl(),
+                'url_product_image' => $product->getImageUrl()
+            ];
+        }
+
+        $message = [
+            'order_ref' => $netreviewsOrder->getRef(),
+            'email' => $netreviewsOrder->getEmail(),
+            'order_date' => $netreviewsOrder->getDate(),
+            'firstname' => $netreviewsOrder->getFirstname(),
+            'lastname' => $netreviewsOrder->getLastname(),
+            'delay' => $netreviewsOrder->getDelay(),
+        ];
+
+        $message['PRODUCTS'] = $products;
 
 
     }
 
-    public function getOrderInfos($orderId)
+    public function getNetreviewsOrder($orderId)
     {
-        $idWebSite = NetReviews::getConfigValue('id_website');
-        $secret = NetReviews::getConfigValue('secret_token');
-
         /** @var ConnectionWrapper $con */
         $con = Propel::getConnection();
 
-        $orderProductSql = "SELECT o.ref, cu.firstname, cu.lastname, cu.email, op.product_ref, op.title, ru.url, pi.file
+        $orderProductSql = "SELECT o.ref, o.created_at, cu.firstname, cu.lastname, cu.email, op.product_ref, op.title, ru.url, pi.file
                             FROM order_product op 
                             LEFT JOIN `order` o ON (op.order_id = o.id)
                             LEFT JOIN `customer` cu ON (o.customer_id = cu.id)
@@ -56,28 +81,36 @@ class OrderService
         $stmt->execute();
         $results = $stmt->fetchAll();
 
-        $orderRef = $results[0]['ref'];
-        $token = sha1($idWebSite.$secret.$orderRef);
-        $firstname = $results[0]['firstname'];
-        $lastname = $results[0]['lastname'];
-        $email = $results[0]['email'];
+        $netReviewsOrder = new NetReviewsOrder();
+
+        $netReviewsOrder->setRef($results[0]['ref'])
+            ->setDate($results[0]['created_at'])
+            ->setFirstname($results[0]['firstname'])
+            ->setLastname($results[0]['lastname'])
+            ->setEmail($results[0]['email'])
+            ->setDelay(0);
 
         $baseUrl = ConfigQuery::read('url_site');
+
+        $products = [];
 
         foreach ($results as $orderProduct) {
             $imageEvent = $this->createProductImageEvent($orderProduct['file']);
             $this->eventDispatcher->dispatch(TheliaEvents::IMAGE_PROCESS, $imageEvent);
             $imagePath = $imageEvent->getFileUrl();
 
-            $products[] = [
-                'name_product' => $orderProduct['title'],
-                'id_product' => $orderProduct['product_ref'],
-                'url_product' => $baseUrl."/".$orderProduct['url'],
-                'url_image_product' => $imagePath
-            ];
+            $product = new NetReviewsProduct();
+            $product->setId($orderProduct['product_ref'])
+                ->setName($orderProduct['title'])
+                ->setUrl($baseUrl."/".$orderProduct['url'])
+                ->setImageUrl($imagePath);
+
+            $products[] = $product;
         }
 
+        $netReviewsOrder->setProducts($products);
 
+        return $netReviewsOrder;
     }
 
     /**
