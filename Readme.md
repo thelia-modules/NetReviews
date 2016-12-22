@@ -20,41 +20,21 @@ composer require thelia-modules/netreviews-module:~1.0
 
 ## Usage
 
-Before any configuration you need to create an account on the platform
+Before any configuration you need to create an account on the netreviews platform.
+
 Then you need to configure this modules here http://yourdomain.com/admin/module/NetReviews
-"Id website" and "Secret token" can be found in your platform account 
+"Id website" and "Secret token" can be found in your platform account.
 
 ## Hook
 
-``main.footer-bottom``` is used to display a link to your site review page
-main.body-top is used to display the site widget
-product.additional is used to display the product widget
+```main.footer-bottom``` is used to display a link to your site review page
 
+But of you want change the place of the link you can disable precedent hook and add the ```netreviews.footer.link``` where you want
 
-## Loop
+```main.body-top``` is used to display the site widget
 
-If your module declare one or more loop, describe them here like this :
+But of you want change the place of the widget you can disable precedent hook and add the ```netreviews.site.widget``` where you want
 
-[loop name]
+```product.additional``` is used to display the product widget
 
-### Input arguments
-
-|Argument |Description |
-|---      |--- |
-|**arg1** | describe arg1 with an exemple. |
-|**arg2** | describe arg2 with an exemple. |
-
-### Output arguments
-
-|Variable   |Description |
-|---        |--- |
-|$VAR1    | describe $VAR1 variable |
-|$VAR2    | describe $VAR2 variable |
-
-### Exemple
-
-Add a complete exemple of your loop
-
-## Other ?
-
-If you have other think to put, feel free to complete your readme as you want.
+But of you want change the place of the widget you can disable precedent hook and add the ```netreviews.product.iframe``` where you want
