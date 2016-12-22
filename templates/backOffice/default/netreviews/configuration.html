@@ -1,0 +1,79 @@
+{extends file="admin-layout.tpl"}
+
+{block name="after-bootstrap-css"}
+
+{/block}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'module'}
+{/block}
+
+{block name="page-title"}{intl l='NetReviews module configuration' d='netreviews.bo.default'}{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}view{/block}
+{block name="check-module"}NetReviews{/block}
+
+{block name="main-content"}
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    {intl l="NetReviews configuration"}
+                </h4>
+            </div>
+            <div class="panel-body">
+                {form name="netreviews_configuration.form"}
+                    <form action="{url path="/admin/module/netreviews/configuration"}" method="post">
+                        {form_hidden_fields form=$form}
+
+                        {if $form_error}
+                            <div class="alert alert-danger">{$form_error_message}</div>
+                        {/if}
+
+                        {form_field form=$form field='success_url'}
+                            <input type="hidden" name="{$name}" value="{url path={navigate to="current"}}"/>
+                        {/form_field}
+
+                        <div class="col-md-12 form-group">
+                            <div class="col-md-6">
+                                {render_form_field form=$form field="id_website" value={$data}}
+                            </div>
+                            <div class="col-md-6">
+                                {render_form_field form=$form field="secret_token" value={$data}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <div class="col-md-6">
+                                <label for="site_widget_code">{intl l="Code du widget site :"}</label>
+                                {form_field field="site_widget_code"}
+                                    <textarea id="site_widget_code" name="{$name}" class="form-control">{$value}</textarea>
+                                {/form_field}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="product_iframe_code">{intl l="Code de l'iframe produit :"}</label>
+                                {form_field field="product_iframe_code"}
+                                    <textarea id="product_iframe_code" name="{$name}" class="form-control">{$value}</textarea>
+                                {/form_field}
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <div class="col-md-6">
+                                {render_form_field form=$form field="footer_link_title" value={$data}}
+                            </div>
+                            <div class="col-md-6">
+                                {render_form_field form=$form field="footer_link" value={$data}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <input type="submit" class="btn btn-success form-control">
+                        </div>
+                    </form>
+                {/form}
+            </div>
+        </div>
+    </div>
+{/block}

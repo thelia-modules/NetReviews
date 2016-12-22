@@ -1,0 +1,75 @@
+<?php
+/*************************************************************************************/
+/*      This file is part of the Thelia package.                                     */
+/*                                                                                   */
+/*      Copyright (c) OpenStudio                                                     */
+/*      email : dev@thelia.net                                                       */
+/*      web : http://www.thelia.net                                                  */
+/*                                                                                   */
+/*      For the full copyright and license information, please view the LICENSE.txt  */
+/*      file that was distributed with this source code.                             */
+/*************************************************************************************/
+
+namespace NetReviews;
+
+use Thelia\Core\Template\TemplateDefinition;
+use Thelia\Module\BaseModule;
+
+class NetReviews extends BaseModule
+{
+    /** @var string */
+    const DOMAIN_NAME = 'netreviews';
+
+    /*
+     * You may now override BaseModuleInterface methods, such as:
+     * install, destroy, preActivation, postActivation, preDeactivation, postDeactivation
+     *
+     * Have fun !
+     */
+
+    public function getHooks()
+    {
+        return [
+            [
+                "type" => TemplateDefinition::FRONT_OFFICE,
+                "code" => "netreviews.tagmanager",
+                "title" => [
+                    "en_US" => "Tag manager for Verified Reviews",
+                    "fr_FR" => "Tag manager pour Avis Verifies",
+                ],
+                "block" => false,
+                "active" => true,
+            ],
+            [
+                "type" => TemplateDefinition::FRONT_OFFICE,
+                "code" => "netreviews.site.widget",
+                "title" => [
+                    "en_US" => "Widget Site",
+                    "fr_FR" => "Widget Site",
+                ],
+                "block" => false,
+                "active" => true,
+            ],
+            [
+                "type" => TemplateDefinition::FRONT_OFFICE,
+                "code" => "netreviews.product.iframe",
+                "title" => [
+                    "en_US" => "Iframe product",
+                    "fr_FR" => "Iframe produit",
+                ],
+                "block" => false,
+                "active" => true,
+            ],
+            [
+                "type" => TemplateDefinition::FRONT_OFFICE,
+                "code" => "netreviews.footer.link",
+                "title" => [
+                    "en_US" => "Footer link",
+                    "fr_FR" => "Lien footer",
+                ],
+                "block" => false,
+                "active" => true,
+            ]
+        ];
+    }
+}

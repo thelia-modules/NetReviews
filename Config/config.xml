@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config xmlns="http://thelia.net/schema/dic/config"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+
+    <loops>
+        <!-- sample definition
+        <loop name="MySuperLoop" class="NetReviews\Loop\MySuperLoop" />
+        -->
+    </loops>
+
+    <forms>
+        <form name="netreviews_configuration.form" class="NetReviews\Form\ConfigurationForm" />
+    </forms>
+
+    <commands>
+        <!--
+        <command class="NetReviews\Command\MySuperCommand" />
+        -->
+    </commands>
+
+    <!--
+    <services>
+
+    </services>
+    -->
+
+    <hooks>
+        <hook id="netreviews.hook" class="NetReviews\Hook\FrontHook">
+            <tag name="hook.event_listener" event="main.footer-bottom" type="front" method="displayFooterLink" />
+            <tag name="hook.event_listener" event="main.body-top" type="front" method="displaySiteWidget" />
+            <tag name="hook.event_listener" event="product.additional" type="front" method="displayProductTabIframe" />
+
+
+            <tag name="hook.event_listener" event="netreviews.tagmanager" type="front" method="displayTag" />
+            <tag name="hook.event_listener" event="netreviews.site.widget" type="front" method="displaySiteWidget" />
+            <tag name="hook.event_listener" event="netreviews.product.iframe" type="front" method="displayProductIframe" />
+            <tag name="hook.event_listener" event="netreviews.footer.link" type="front" method="displayFooterLink" />
+        </hook>
+    </hooks>
+
+    <!--
+    <exports>
+
+    </exports>
+    -->
+
+    <!--
+    <imports>
+
+    </imports>
+    -->
+</config>
