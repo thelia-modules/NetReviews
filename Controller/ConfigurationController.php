@@ -39,6 +39,7 @@ class ConfigurationController extends BaseAdminController
             NetReviews::setConfigValue('product_iframe_code', $data['product_iframe_code']);
             NetReviews::setConfigValue('footer_link_title', $data['footer_link_title']);
             NetReviews::setConfigValue('footer_link', $data['footer_link']);
+            NetReviews::setConfigValue('api_url', $data['api_url']);
 
         } catch (\Exception $e) {
             $this->setupFormErrorContext(

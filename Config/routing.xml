@@ -35,4 +35,9 @@
     <route id="admin.netreviews.config.save" path="/admin/module/netreviews/configuration">
         <default key="_controller">NetReviews\Controller\ConfigurationController::saveAction</default>
     </route>
+
+    <route id="admin.netreviews.order.send" path="/admin/module/netreviews/order/{orderId}" methods="post">
+        <default key="_controller">NetReviews\Controller\OrderController::sendAction</default>
+    </route>
+
 </routes>

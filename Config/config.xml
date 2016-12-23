@@ -12,6 +12,7 @@
 
     <forms>
         <form name="netreviews_configuration.form" class="NetReviews\Form\ConfigurationForm" />
+        <form name="netreviews_send_order_form" class="NetReviews\Form\SendOrderForm" />
     </forms>
 
     <commands>
@@ -42,6 +43,10 @@
             <tag name="hook.event_listener" event="netreviews.footer.link" type="front" method="displayFooterLink" />
 
             <argument type="service" id="netreviews.order.service"/>
+        </hook>
+
+        <hook id="netreviews.hook" class="NetReviews\Hook\BackHook">
+            <tag name="hook.event_listener" event="order-edit.bottom" type="back" method="onOrderEditBottom" />
         </hook>
     </hooks>
 

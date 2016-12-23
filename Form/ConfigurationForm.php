@@ -64,6 +64,15 @@ class ConfigurationForm extends BaseForm
                     "label"=>Translator::getInstance()->trans("Footer link", array(), NetReviews::DOMAIN_NAME),
                     "required" => false
                 ]
+            )
+            ->add(
+                'api_url',
+                'text',
+                [
+                    "data" => NetReviews::getConfigValue("api_url"),
+                    "label"=>Translator::getInstance()->trans("Platform language", array(), NetReviews::DOMAIN_NAME),
+                    "required" => false
+                ]
             );
     }
 

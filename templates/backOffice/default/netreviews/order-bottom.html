@@ -1,0 +1,17 @@
+<div class="general-block-decorator">
+    <div class="row">
+      <div class="col-md-4 title">
+        {intl l="Send order to NetReviews"}
+      </div>
+        <div class="col-md-4">
+            {form name="netreviews_send_order_form"}
+                <form action="{url path='/admin/module/netreviews/order/%orderId' orderId=$order_id}" method="post">
+                    {form_hidden_fields form=$form}
+                    <div class="col-md-12">
+                        <input type="submit" class="btn btn-success form-control" value="{intl l='Send'}">
+                    </div>
+                </form>
+            {/form}
+        </div>
+    </div>
+</div>

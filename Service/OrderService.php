@@ -2,6 +2,7 @@
 
 namespace NetReviews\Service;
 
+use NetReviews\Model\NetreviewsOrderQueueQuery;
 use NetReviews\NetReviews;
 use NetReviews\Object\NetReviewsOrder;
 use NetReviews\Object\NetReviewsProduct;
@@ -31,6 +32,7 @@ class OrderService
     {
         $idWebSite = NetReviews::getConfigValue('id_website');
         $secret = NetReviews::getConfigValue('secret_token');
+        $apiUrl = NetReviews::getConfigValue('api_url');
 
         $netreviewsOrder = $this->getNetreviewsOrder($orderId);
         $products = [];
@@ -46,6 +48,7 @@ class OrderService
         }
 
         $message = [
+            'query' => 'pushCommandeSHA1',
             'order_ref' => $netreviewsOrder->getRef(),
             'email' => $netreviewsOrder->getEmail(),
             'order_date' => $netreviewsOrder->getDate(),
@@ -54,9 +57,40 @@ class OrderService
             'delay' => $netreviewsOrder->getDelay(),
         ];
 
+        $message['sign'] = SHA1($message['query'].$message['order_ref'].$message['email'].$message['lastname'].$message['firstname'].$message['order_date'].$message['delay'].$secret);
         $message['PRODUCTS'] = $products;
 
+        $fields = http_build_query(
+            [
+                'idWebsite'=> $idWebSite,
+                'message' => $this->acEncodeBase64(json_encode($message)),
+                'type' => 'json'
+            ]
+        );
 
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "http://$apiUrl/index.php?action=act_api_notification_sha1");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
+        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-type: application/x-www-form-urlencoded']);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $decodedResponse = json_decode($this->acDecodeBase64($response));
+        $return = $decodedResponse->return;
+
+        if ($return == 1) {
+            $netreviewsOrderQueue = NetreviewsOrderQueueQuery::create()
+                ->filterByOrderId($orderId)
+                ->findOneOrCreate();
+            $netreviewsOrderQueue->setTreatedAt(new \DateTime())
+                ->setStatus('1')
+                ->save();
+        }
+
+        return $decodedResponse;
     }
 
     public function getNetreviewsOrder($orderId)
@@ -136,5 +170,19 @@ class OrderService
         $imageEvent->setSourceFilepath($sourceFilePath);
         $imageEvent->setCacheSubdirectory('product');
         return $imageEvent;
+    }
+
+    //------Netreviews methods-----//
+
+    protected function acEncodeBase64($sData)
+    {
+        $sBase64 = base64_encode($sData);
+        return strtr($sBase64, '+/', '‐_');
+    }
+
+    protected function acDecodeBase64($sData)
+    {
+        $sBase64 = strtr($sData, '‐_', '+/');
+        return base64_decode($sBase64);
     }
 }
