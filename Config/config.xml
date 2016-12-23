@@ -16,9 +16,7 @@
     </forms>
 
     <commands>
-        <!--
-        <command class="NetReviews\Command\MySuperCommand" />
-        -->
+        <command class="NetReviews\Command\SendOrderCommand" />
     </commands>
 
     <services>
