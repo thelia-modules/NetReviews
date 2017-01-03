@@ -25,7 +25,13 @@ Before any configuration you need to create an account on the netreviews platfor
 Then you need to configure this modules here http://yourdomain.com/admin/module/NetReviews
 "Id website" and "Secret token" can be found in your platform account.
 
-You also need to fill the thelia variable "url_site" here "/admin/configuration/variables" with your domain name
+You also need to fill the thelia variable "url_site" here "/admin/configuration/variables" with your domain name.
+
+### Sending orders to Netreviews
+If you want to automate the sending of orders to netreviews there is a cron for it, just call this commands : ```php Thelia module:NetReviews:SendOrder``` 
+it will send all order in queue (all orders created when this module is active) to netreviews.
+
+If you want to do it manually there is a button at the bottom of back office order page who send directly the order.
 
 ## Hook
 
@@ -40,3 +46,6 @@ But of you want change the place of the widget you can disable precedent hook an
 ```product.additional``` is used to display the product widget
 
 But of you want change the place of the widget you can disable precedent hook and add the ```netreviews.product.iframe``` where you want
+
+## To Do 
+Retrieve products reviews by xml files
