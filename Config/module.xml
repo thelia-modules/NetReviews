@@ -24,7 +24,6 @@
     </authors>
     <type>classic</type>
     <required>
-        <!--<module version="&gt;=0.1">GoogleTagManager</module>-->
     </required>
     <thelia>2.3.0</thelia>
     <stability>other</stability>
