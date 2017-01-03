@@ -40,16 +40,19 @@ class SendOrderCommand extends ContainerAwareCommand
 
             /** @var NetreviewsOrderQueue $order */
             foreach ($ordersInQueue as $order) {
-                $orderId = $order->getOrderId();
-                $response = $netreviewsOrderService->sendOrderToNetReviews($orderId);
-                $return = $response->return;
+                try {
+                    $orderId = $order->getOrderId();
+                    $response = $netreviewsOrderService->sendOrderToNetReviews($orderId);
+                    $return = $response->return;
 
-                if ($return != 1) {
-                    $debug = $response->debug;
-                    $output->writeln(sprintf("<error>Error on order id $orderId: $debug</error>"));
+                    if ($return != 1) {
+                        $debug = $response->debug;
+                        throw new \Exception($debug);
+                    }
+                } catch (\Exception $e) {
+                    $output->writeln(sprintf("<error>Error on order id ".$order->getOrderId().":".$e->getMessage()."</error>"));
                 }
             }
-
         } catch (\Exception $e) {
             $output->writeln('');
             $output->writeln('<error>'.$e->getMessage().'</error>');

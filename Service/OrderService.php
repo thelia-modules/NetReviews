@@ -16,11 +16,17 @@ use Thelia\Model\ConfigQuery;
 
 class OrderService
 {
+    const STATUS_TO_EXPORT = [3,4];
+
+    const DEBUG_API_URL = "www.preprod.avis-verifies.com";
+
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
     /** @var  Request */
     protected $request;
+
+
 
     public function __construct(EventDispatcherInterface $eventDispatcher, Request $request)
     {
@@ -32,7 +38,14 @@ class OrderService
     {
         $idWebSite = NetReviews::getConfigValue('id_website');
         $secret = NetReviews::getConfigValue('secret_token');
+
         $apiUrl = NetReviews::getConfigValue('api_url');
+
+        $debug = NetReviews::DEBUG_MODE;
+
+        if (1 == $debug) {
+            $apiUrl = self::DEBUG_API_URL;
+        }
 
         $netreviewsOrder = $this->getNetreviewsOrder($orderId);
         $products = [];
@@ -97,6 +110,7 @@ class OrderService
     {
         /** @var ConnectionWrapper $con */
         $con = Propel::getConnection();
+        $statusToExport = implode(',', self::STATUS_TO_EXPORT);
 
         $orderProductSql = "SELECT o.ref, o.created_at, cu.firstname, cu.lastname, cu.email, op.product_ref, op.title, ru.url, pi.file
                             FROM order_product op 
@@ -106,6 +120,7 @@ class OrderService
                             LEFT JOIN `rewriting_url` ru ON (p.id = ru.view_id)
                             LEFT JOIN `product_image` pi ON (p.id = pi.product_id)
                             WHERE o.id = $orderId
+                            AND o.status_id IN ($statusToExport)
                             AND ru.view = 'product'
                             AND ru.redirected IS NULL
                             AND pi.position = 1
@@ -114,6 +129,10 @@ class OrderService
         $stmt = $con->prepare($orderProductSql);
         $stmt->execute();
         $results = $stmt->fetchAll();
+
+        if (empty($results)) {
+            throw new \Exception("The order was not ready to be exported");
+        }
 
         $netReviewsOrder = new NetReviewsOrder();
 

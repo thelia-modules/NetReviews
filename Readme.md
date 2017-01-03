@@ -25,6 +25,8 @@ Before any configuration you need to create an account on the netreviews platfor
 Then you need to configure this modules here http://yourdomain.com/admin/module/NetReviews
 "Id website" and "Secret token" can be found in your platform account.
 
+You also need to fill the thelia variable "url_site" here "/admin/configuration/variables" with your domain name
+
 ## Hook
 
 ```main.footer-bottom``` is used to display a link to your site review page
