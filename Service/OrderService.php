@@ -16,7 +16,7 @@ use Thelia\Model\ConfigQuery;
 
 class OrderService
 {
-    const STATUS_TO_EXPORT = [3,4];
+    const STATUS_TO_EXPORT = "3,4";
 
     const DEBUG_API_URL = "www.preprod.avis-verifies.com";
 
@@ -110,7 +110,7 @@ class OrderService
     {
         /** @var ConnectionWrapper $con */
         $con = Propel::getConnection();
-        $statusToExport = implode(',', self::STATUS_TO_EXPORT);
+        $statusToExport = self::STATUS_TO_EXPORT;
 
         $orderProductSql = "SELECT o.ref, o.created_at, cu.firstname, cu.lastname, cu.email, op.product_ref, op.title, ru.url, pi.file
                             FROM order_product op 
