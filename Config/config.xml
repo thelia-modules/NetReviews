@@ -30,7 +30,7 @@
     </services>
 
     <hooks>
-        <hook id="netreviews.hook" class="NetReviews\Hook\FrontHook">
+        <hook id="netreviews.hook.front" class="NetReviews\Hook\FrontHook">
             <tag name="hook.event_listener" event="main.footer-bottom" type="front" method="displayFooterLink" />
             <tag name="hook.event_listener" event="main.body-top" type="front" method="displaySiteWidget" />
             <tag name="hook.event_listener" event="product.additional" type="front" method="displayProductTabIframe" />
@@ -43,7 +43,7 @@
             <argument type="service" id="netreviews.order.service"/>
         </hook>
 
-        <hook id="netreviews.hook" class="NetReviews\Hook\BackHook">
+        <hook id="netreviews.hook.back" class="NetReviews\Hook\BackHook">
             <tag name="hook.event_listener" event="order-edit.bottom" type="back" method="onOrderEditBottom" />
         </hook>
     </hooks>
