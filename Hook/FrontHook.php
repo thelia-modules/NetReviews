@@ -14,6 +14,7 @@ use Thelia\Core\Event\TheliaEvents;
 use Thelia\Core\Hook\BaseHook;
 use Thelia\Model\ConfigQuery;
 use Thelia\Model\ProductImage;
+use Thelia\Model\ProductQuery;
 
 class FrontHook extends BaseHook
 {
@@ -113,24 +114,28 @@ class FrontHook extends BaseHook
     public function displayProductTabIframe(HookRenderBlockEvent $event)
     {
         $code = NetReviews::getConfigValue('product_iframe_code');
-        $product_ref = $event->getArgument('product_ref');
-        $content = $this->render(
-            "netreviews/product-iframe.html",
-            [
-                "product_iframe_code" => $code,
-                "product_ref" => $product_ref
-            ]
-        );
+        $productId = $event->getArgument('product');
+        $product = ProductQuery::create()
+            ->findPk($productId);
 
-        $event->add(
-            [
-                'id' => 'netreviews_tab',
-                'class' => '',
-                'title' => $this->trans('Net Reviews', [], NetReviews::DOMAIN_NAME),
-                'content' => $content
-            ]
-        );
+        if (null !== $product) {
+            $content = $this->render(
+                "netreviews/product-iframe.html",
+                [
+                    "product_iframe_code" => $code,
+                    "product_ref" => $product->getRef()
+                ]
+            );
 
+            $event->add(
+                [
+                    'id' => 'netreviews_tab',
+                    'class' => '',
+                    'title' => $this->trans('Net Reviews', [], NetReviews::DOMAIN_NAME),
+                    'content' => $content
+                ]
+            );
+        }
     }
 
     /**
