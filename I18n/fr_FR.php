@@ -6,8 +6,10 @@ return array(
     'Footer link title' => 'Texte du lien dans le pied de page',
     'Id website' => 'Identifiant Site Web',
     'Net Reviews' => 'Avis vérifiés',
+    'Order status to export' => 'Statut des commandes à envoyer :',
     'Platform language' => 'Langue de la plateforme',
     'Product iframe code' => 'Code de l\'iframe produit',
+    'Reviews email delay (in days):' => 'Délais d\'envois des emails (en jours) :',
     'Secret token' => 'Votre Clé Secrète',
     'Site widget code' => 'Code du widget site',
 );

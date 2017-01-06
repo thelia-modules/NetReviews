@@ -46,13 +46,13 @@
 
                         <div class="col-md-12 form-group">
                             <div class="col-md-6">
-                                <label for="site_widget_code">{intl l="Site widget code :"}</label>
+                                <label for="site_widget_code">{intl l="Site widget code :" d='netreviews.bo.default'}</label>
                                 {form_field field="site_widget_code"}
                                     <textarea id="site_widget_code" name="{$name}" class="form-control">{$value}</textarea>
                                 {/form_field}
                             </div>
                             <div class="col-md-6">
-                                <label for="product_iframe_code">{intl l="Product iframe code :"}</label>
+                                <label for="product_iframe_code">{intl l="Product iframe code :" d='netreviews.bo.default'}</label>
                                 {form_field field="product_iframe_code"}
                                     <textarea id="product_iframe_code" name="{$name}" class="form-control">{$value}</textarea>
                                 {/form_field}
@@ -70,7 +70,7 @@
 
                         <div class="col-md-12 form-group">
                             <div class="col-md-6">
-                                <label for="api_url">{intl l="Platform language :"}</label>
+                                <label for="api_url">{intl l="Platform language :" d='netreviews.bo.default'}</label>
                                 {form_field field="api_url"}
                                     <select id="api_url" name="{$name}" class="form-control">
                                         <option value="www.avis-verifies.com" {if $data == "www.avis-verifies.com"}selected{/if}>FR</option>
