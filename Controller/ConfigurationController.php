@@ -40,7 +40,8 @@ class ConfigurationController extends BaseAdminController
             NetReviews::setConfigValue('footer_link_title', $data['footer_link_title']);
             NetReviews::setConfigValue('footer_link', $data['footer_link']);
             NetReviews::setConfigValue('api_url', $data['api_url']);
-
+            NetReviews::setConfigValue('email_delay', $data['email_delay']);
+            NetReviews::setConfigValue('status_to_export', implode(',', $data['status_to_export']));
         } catch (\Exception $e) {
             $this->setupFormErrorContext(
                 Translator::getInstance()->trans(

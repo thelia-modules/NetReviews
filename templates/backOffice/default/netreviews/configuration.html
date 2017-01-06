@@ -46,13 +46,13 @@
 
                         <div class="col-md-12 form-group">
                             <div class="col-md-6">
-                                <label for="site_widget_code">{intl l="Code du widget site :"}</label>
+                                <label for="site_widget_code">{intl l="Site widget code :"}</label>
                                 {form_field field="site_widget_code"}
                                     <textarea id="site_widget_code" name="{$name}" class="form-control">{$value}</textarea>
                                 {/form_field}
                             </div>
                             <div class="col-md-6">
-                                <label for="product_iframe_code">{intl l="Code de l'iframe produit :"}</label>
+                                <label for="product_iframe_code">{intl l="Product iframe code :"}</label>
                                 {form_field field="product_iframe_code"}
                                     <textarea id="product_iframe_code" name="{$name}" class="form-control">{$value}</textarea>
                                 {/form_field}
@@ -67,11 +67,12 @@
                                 {render_form_field form=$form field="footer_link" value={$data}}
                             </div>
                         </div>
-                        
+
                         <div class="col-md-12 form-group">
                             <div class="col-md-6">
+                                <label for="api_url">{intl l="Platform language :"}</label>
                                 {form_field field="api_url"}
-                                    <select name="{$name}" class="form-control">
+                                    <select id="api_url" name="{$name}" class="form-control">
                                         <option value="www.avis-verifies.com" {if $data == "www.avis-verifies.com"}selected{/if}>FR</option>
                                         <option value="www.opiniones-verificadas.com" {if $data == "www.opiniones-verificadas.com"}selected{/if}>ES</option>
                                         <option value="www.echte-bewertungen.com" {if $data == "www.echte-bewertungen.com"}selected{/if}>DE</option>
@@ -86,6 +87,15 @@
                                         <option value="www.opiniones-verificadas.com.mx" {if $data == "www.opiniones-verificadas.com.mx"}selected{/if}>MX</option>
                                     </select>
                                 {/form_field}
+                            </div>
+                            <div class="col-md-6">
+                                {render_form_field form=$form field="email_delay" value={$data}}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12 form-group">
+                            <div class="col-md-6">
+                                {render_form_field form=$form field="status_to_export" value={$data}}
                             </div>
                         </div>
 

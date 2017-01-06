@@ -16,8 +16,6 @@ use Thelia\Model\ConfigQuery;
 
 class OrderService
 {
-    const STATUS_TO_EXPORT = "3,4";
-
     const DEBUG_API_URL = "www.preprod.avis-verifies.com";
 
     /** @var EventDispatcherInterface */
@@ -25,8 +23,6 @@ class OrderService
 
     /** @var  Request */
     protected $request;
-
-
 
     public function __construct(EventDispatcherInterface $eventDispatcher, Request $request)
     {
@@ -110,7 +106,8 @@ class OrderService
     {
         /** @var ConnectionWrapper $con */
         $con = Propel::getConnection();
-        $statusToExport = self::STATUS_TO_EXPORT;
+        $statusToExport = NetReviews::getConfigValue('status_to_export', '3,4');
+        $delay = NetReviews::getConfigValue('email_delay', '3');
 
         $orderProductSql = "SELECT o.ref, o.created_at, cu.firstname, cu.lastname, cu.email, op.product_ref, op.title, ru.url, pi.file
                             FROM order_product op 
@@ -141,7 +138,7 @@ class OrderService
             ->setFirstname($results[0]['firstname'])
             ->setLastname($results[0]['lastname'])
             ->setEmail($results[0]['email'])
-            ->setDelay(0);
+            ->setDelay($delay);
 
         $baseUrl = ConfigQuery::read('url_site');
 
