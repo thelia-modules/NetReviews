@@ -13,10 +13,12 @@
     <forms>
         <form name="netreviews_configuration.form" class="NetReviews\Form\ConfigurationForm" />
         <form name="netreviews_send_order_form" class="NetReviews\Form\SendOrderForm" />
+        <form name="netreviews_ftp_form" class="NetReviews\Form\FtpForm" />
     </forms>
 
     <commands>
         <command class="NetReviews\Command\SendOrderCommand" />
+        <command class="NetReviews\Command\GetProductReviewCommand" />
     </commands>
 
     <services>
@@ -26,6 +28,12 @@
         <service id="netreviews.order.service" class="NetReviews\Service\OrderService" scope="request">
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="request"/>
+        </service>
+        <service id="netreviews.product_review.service" class="NetReviews\Service\ProductReviewService">
+        </service>
+        <service id="netreviews.product_review.smarty.plugin" class="NetReviews\Smarty\ProductReviews">
+            <tag name="thelia.parser.register_plugin"/>
+            <argument type="service" id="netreviews.product_review.service"/>
         </service>
     </services>
 

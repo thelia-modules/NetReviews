@@ -106,5 +106,55 @@
                 {/form}
             </div>
         </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    {intl l="Ftp configuration"}
+                </h4>
+            </div>
+            <div class="panel-body">
+                {form name="netreviews_ftp_form"}
+                    <form action="{url path="/admin/module/netreviews/configuration/ftp"}" method="post">
+                        {form_hidden_fields form=$form}
+
+                        {if $form_error}
+                            <div class="alert alert-danger">{$form_error_message}</div>
+                        {/if}
+
+                        {form_field form=$form field='success_url'}
+                            <input type="hidden" name="{$name}" value="{url path={navigate to="current"}}"/>
+                        {/form_field}
+
+                        <div class="col-md-12 form-group">
+                            <div class="col-md-6">
+                                {render_form_field form=$form field="ftp_server" value={$data}}
+                            </div>
+                            <div class="col-md-6">
+                                {render_form_field form=$form field="ftp_username" value={$data}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <div class="col-md-6">
+                                {render_form_field form=$form field="ftp_password" value={$data}}
+                            </div>
+                            <div class="col-md-6">
+                                {render_form_field form=$form field="ftp_port" value={$data}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <div class="col-md-6">
+                                {render_form_field form=$form field="ftp_directory" value={$data}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <input type="submit" class="btn btn-success form-control">
+                        </div>
+                    </form>
+                {/form}
+            </div>
+        </div>
     </div>
 {/block}

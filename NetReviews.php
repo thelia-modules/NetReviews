@@ -13,9 +13,11 @@
 namespace NetReviews;
 
 use NetReviews\Model\NetreviewsOrderQueueQuery;
+use NetReviews\Model\NetreviewsProductReviewQuery;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Thelia\Core\Template\TemplateDefinition;
 use Thelia\Install\Database;
+use Thelia\Log\Tlog;
 use Thelia\Module\BaseModule;
 
 class NetReviews extends BaseModule
@@ -23,7 +25,7 @@ class NetReviews extends BaseModule
     /** @var string */
     const DOMAIN_NAME = 'netreviews';
 
-    const DEBUG_MODE = 0;
+    const DEBUG_MODE = 1;
 
     public function postActivation(ConnectionInterface $con = null)
     {
@@ -33,6 +35,14 @@ class NetReviews extends BaseModule
         } catch (\Exception $exception) {
             $database = new Database($con);
             $database->insertSql(null, [__DIR__ . "/Config/sql/netreviews_order_queue.sql"]);
+        }
+
+        try {
+            NetreviewsProductReviewQuery::create()
+                ->find();
+        } catch (\Exception $exception) {
+            $database = new Database($con);
+            $database->insertSql(null, [__DIR__ . "/Config/sql/netreviews_product_review.sql"]);
         }
     }
 
@@ -80,5 +90,19 @@ class NetReviews extends BaseModule
                 "active" => true,
             ]
         ];
+    }
+
+    public static function log($msg)
+    {
+        $year = (new \DateTime())->format('Y');
+        $month = (new \DateTime())->format('m');
+        $logger = Tlog::getNewInstance();
+        $logger->setDestinations("\\Thelia\\Log\\Destination\\TlogDestinationFile");
+        $logger->setConfig(
+            "\\Thelia\\Log\\Destination\\TlogDestinationFile",
+            0,
+            THELIA_ROOT . "log" . DS . "netreviews" . DS . $year.$month.".txt"
+        );
+        $logger->addAlert("MESSAGE => " . print_r($msg, true));
     }
 }

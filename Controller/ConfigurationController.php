@@ -57,4 +57,36 @@ class ConfigurationController extends BaseAdminController
 
         return $this->generateSuccessRedirect($form);
     }
+
+    public function ftpSaveAction()
+    {
+        if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'NetReviews', AccessManager::VIEW)) {
+            return $response;
+        }
+
+        $form = $this->createForm("netreviews_ftp_form");
+
+        try {
+            $data = $this->validateForm($form)->getData();
+
+            NetReviews::setConfigValue('ftp_server', $data['ftp_server']);
+            NetReviews::setConfigValue('ftp_username', $data['ftp_username']);
+            NetReviews::setConfigValue('ftp_password', $data['ftp_password']);
+            NetReviews::setConfigValue('ftp_port', $data['ftp_port']);
+            NetReviews::setConfigValue('ftp_directory', $data['ftp_directory']);
+        } catch (\Exception $e) {
+            $this->setupFormErrorContext(
+                Translator::getInstance()->trans(
+                    "Error",
+                    [],
+                    NetReviews::DOMAIN_NAME
+                ),
+                $e->getMessage(),
+                $form
+            );
+            return $this->viewAction();
+        }
+
+        return $this->generateSuccessRedirect($form);
+    }
 }
