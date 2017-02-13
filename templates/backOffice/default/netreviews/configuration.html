@@ -22,139 +22,134 @@
                     {intl l="NetReviews configuration"}
                 </h4>
             </div>
-            <div class="panel-body">
-                {form name="netreviews_configuration.form"}
-                    <form action="{url path="/admin/module/netreviews/configuration"}" method="post">
-                        {form_hidden_fields form=$form}
+            {form name="netreviews_configuration.form"}
+                <form action="{url path="/admin/module/netreviews/configuration"}" method="post">
+                    {form_hidden_fields form=$form}
 
-                        {if $form_error}
-                            <div class="alert alert-danger">{$form_error_message}</div>
-                        {/if}
+                    {if $form_error}
+                        <div class="alert alert-danger">{$form_error_message}</div>
+                    {/if}
 
-                        {form_field form=$form field='success_url'}
-                            <input type="hidden" name="{$name}" value="{url path={navigate to="current"}}"/>
-                        {/form_field}
+                    {form_field form=$form field='success_url'}
+                        <input type="hidden" name="{$name}" value="{url path={navigate to="current"}}"/>
+                    {/form_field}
 
-                        <div class="col-md-12 form-group">
-                            <div class="col-md-6">
-                                {render_form_field form=$form field="id_website" value={$data}}
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h2 class="title title-without-tabs">{intl l="Netreviews access" d='netreviews.bo.default'}</h2>
+                                <div class="col-md-12 form-group">
+                                    {render_form_field form=$form field="id_website" value={$data}}
+                                    {render_form_field form=$form field="secret_token" value={$data}}
+                                    <label for="api_url">{intl l="Platform language :" d='netreviews.bo.default'}</label>
+                                    {form_field field="api_url"}
+                                        <select id="api_url" name="{$name}" class="form-control">
+                                            <option value="www.avis-verifies.com" {if $data == "www.avis-verifies.com"}selected{/if}>FR</option>
+                                            <option value="www.opiniones-verificadas.com" {if $data == "www.opiniones-verificadas.com"}selected{/if}>ES</option>
+                                            <option value="www.echte-bewertungen.com" {if $data == "www.echte-bewertungen.com"}selected{/if}>DE</option>
+                                            <option value="www.recensioni-verificate.com" {if $data == "www.recensioni-verificate.com"}selected{/if}>IT</option>
+                                            <option value="www.echte-beoordelingen.com" {if $data == "www.echte-beoordelingen.com"}selected{/if}>NL</option>
+                                            <option value="www.verified-reviews.co.uk" {if $data == "www.verified-reviews.co.uk"}selected{/if}>UK</option>
+                                            <option value="www.verified-reviews.com" {if $data == "www.verified-reviews.com"}selected{/if}>US</option>
+                                            <option value="www.opinioes-verificadas.com.br" {if $data == "www.opinioes-verificadas.com.br"}selected{/if}>BR</option>
+                                            <option value="www.opinioes-verificadas.com" {if $data == "www.opinioes-verificadas.com"}selected{/if}>PT</option>
+                                            <option value="www.opiniones-verificadas.com.co" {if $data == "www.opiniones-verificadas.com.co"}selected{/if}>CO</option>
+                                            <option value="www.prawdziwe-opinie.com" {if $data == "www.prawdziwe-opinie.com"}selected{/if}>PL</option>
+                                            <option value="www.opiniones-verificadas.com.mx" {if $data == "www.opiniones-verificadas.com.mx"}selected{/if}>MX</option>
+                                        </select>
+                                    {/form_field}
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                {render_form_field form=$form field="secret_token" value={$data}}
+                            <div class="col-md-4">
+                                <h2 class="title title-without-tabs">{intl l="Sending orders configuration" d='netreviews.bo.default'}</h2>
+                                <div class="col-md-12 form-group">
+                                    {render_form_field form=$form field="email_delay" value={$data}}
+                                    {render_form_field form=$form field="status_to_export" value={$data}}
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="col-md-12 form-group">
-                            <div class="col-md-6">
-                                <label for="site_widget_code">{intl l="Site widget code :" d='netreviews.bo.default'}</label>
-                                {form_field field="site_widget_code"}
-                                    <textarea id="site_widget_code" name="{$name}" class="form-control">{$value}</textarea>
-                                {/form_field}
-                            </div>
-                            <div class="col-md-6">
-                                <label for="product_iframe_code">{intl l="Product iframe code :" d='netreviews.bo.default'}</label>
-                                {form_field field="product_iframe_code"}
-                                    <textarea id="product_iframe_code" name="{$name}" class="form-control">{$value}</textarea>
-                                {/form_field}
-                            </div>
-                        </div>
-
-                        <div class="col-md-12 form-group">
-                            <div class="col-md-6">
-                                {render_form_field form=$form field="footer_link_title" value={$data}}
-                            </div>
-                            <div class="col-md-6">
-                                {render_form_field form=$form field="footer_link" value={$data}}
-                            </div>
-                        </div>
-
-                        <div class="col-md-12 form-group">
-                            <div class="col-md-6">
-                                <label for="api_url">{intl l="Platform language :" d='netreviews.bo.default'}</label>
-                                {form_field field="api_url"}
-                                    <select id="api_url" name="{$name}" class="form-control">
-                                        <option value="www.avis-verifies.com" {if $data == "www.avis-verifies.com"}selected{/if}>FR</option>
-                                        <option value="www.opiniones-verificadas.com" {if $data == "www.opiniones-verificadas.com"}selected{/if}>ES</option>
-                                        <option value="www.echte-bewertungen.com" {if $data == "www.echte-bewertungen.com"}selected{/if}>DE</option>
-                                        <option value="www.recensioni-verificate.com" {if $data == "www.recensioni-verificate.com"}selected{/if}>IT</option>
-                                        <option value="www.echte-beoordelingen.com" {if $data == "www.echte-beoordelingen.com"}selected{/if}>NL</option>
-                                        <option value="www.verified-reviews.co.uk" {if $data == "www.verified-reviews.co.uk"}selected{/if}>UK</option>
-                                        <option value="www.verified-reviews.com" {if $data == "www.verified-reviews.com"}selected{/if}>US</option>
-                                        <option value="www.opinioes-verificadas.com.br" {if $data == "www.opinioes-verificadas.com.br"}selected{/if}>BR</option>
-                                        <option value="www.opinioes-verificadas.com" {if $data == "www.opinioes-verificadas.com"}selected{/if}>PT</option>
-                                        <option value="www.opiniones-verificadas.com.co" {if $data == "www.opiniones-verificadas.com.co"}selected{/if}>CO</option>
-                                        <option value="www.prawdziwe-opinie.com" {if $data == "www.prawdziwe-opinie.com"}selected{/if}>PL</option>
-                                        <option value="www.opiniones-verificadas.com.mx" {if $data == "www.opiniones-verificadas.com.mx"}selected{/if}>MX</option>
-                                    </select>
-                                {/form_field}
-                            </div>
-                            <div class="col-md-6">
-                                {render_form_field form=$form field="email_delay" value={$data}}
+                            <div class="col-md-4">
+                                <h2 class="title title-without-tabs">{intl l="Footer link" d='netreviews.bo.default'}</h2>
+                                <div class="col-md-12 form-group">
+                                    {render_form_field form=$form field="footer_link_title" value={$data}}
+                                    {render_form_field form=$form field="footer_link" value={$data}}
+                                </div>
                             </div>
                         </div>
-                        
-                        <div class="col-md-12 form-group">
-                            <div class="col-md-6">
-                                {render_form_field form=$form field="status_to_export" value={$data}}
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <input type="submit" class="btn btn-success form-control">
-                        </div>
-                    </form>
-                {/form}
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    {intl l="Ftp configuration"}
-                </h4>
-            </div>
-            <div class="panel-body">
-                {form name="netreviews_ftp_form"}
-                    <form action="{url path="/admin/module/netreviews/configuration/ftp"}" method="post">
-                        {form_hidden_fields form=$form}
-
-                        {if $form_error}
-                            <div class="alert alert-danger">{$form_error_message}</div>
-                        {/if}
-
-                        {form_field form=$form field='success_url'}
-                            <input type="hidden" name="{$name}" value="{url path={navigate to="current"}}"/>
-                        {/form_field}
-
-                        <div class="col-md-12 form-group">
-                            <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h2 class="title title-without-tabs">{intl l="Ftp configuration" d='netreviews.bo.default'}</h2>
                                 {render_form_field form=$form field="ftp_server" value={$data}}
-                            </div>
-                            <div class="col-md-6">
+
                                 {render_form_field form=$form field="ftp_username" value={$data}}
-                            </div>
-                        </div>
 
-                        <div class="col-md-12 form-group">
-                            <div class="col-md-6">
-                                {render_form_field form=$form field="ftp_password" value={$data}}
-                            </div>
-                            <div class="col-md-6">
+                                {form_field form=$form field='ftp_password'}
+                                    <label class="control-label" for="ftp_password">{intl l="Ftp password :" d='netreviews.bo.default'}</label>
+                                    <input class="form-control" id="ftp_password" type="password" name="{$name}" value="{$data}"/>
+                                {/form_field}
+
                                 {render_form_field form=$form field="ftp_port" value={$data}}
-                            </div>
-                        </div>
 
-                        <div class="col-md-12 form-group">
-                            <div class="col-md-6">
                                 {render_form_field form=$form field="ftp_directory" value={$data}}
                             </div>
+                            <div class="col-md-4">
+                                <h2 class="title title-without-tabs">{intl l="Product reviews" d='netreviews.bo.default'}</h2>
+                                <div class="col-md-12 form-group">
+                                    <div class="form-group">
+                                        <label for="product_review_mode">{intl l="Product review mode :" d='netreviews.bo.default'}</label>
+                                        {form_field field="product_review_mode"}
+                                            {$product_review_mode = $data}
+                                            <select id="product_review_mode" name="{$name}" class="form-control">
+                                                <option selected="true" disabled="true">{intl l="Please select a review mode" d='netreviews.bo.default'}</option>
+                                                <option {if $product_review_mode == 'iframe'}selected{/if} value="iframe">{intl l="Display product review throught the netreviews iframe" d='netreviews.bo.default'}</option>
+                                                <option {if $product_review_mode == 'ftp'}selected{/if} value="ftp">{intl l="Import reviews by ftp and display it with templates" d='netreviews.bo.default'}</option>
+                                            </select>
+                                        {/form_field}
+                                    </div>
+                                    <div id="product_iframe" class="product_review_mode_form {if $product_review_mode !== 'iframe'}hidden{/if}">
+                                        <div class="form-group">
+                                            <label class="control-label" for="product_iframe_code">{intl l="Product iframe code :" d='netreviews.bo.default'}</label>
+                                            {form_field field="product_iframe_code"}
+                                                <textarea id="product_iframe_code" name="{$name}" class="form-control" rows="5">{$value}</textarea>
+                                            {/form_field}
+                                        </div>
+                                    </div>
+                                    <div id="product_ftp" class="product_review_mode_form {if $product_review_mode !== 'ftp'}hidden{/if}">
+                                        <p>{intl l="1) Configure ftp export in netreviews backoffice"}</p>
+                                        <p>{intl l="2) Add a cron with this command : "}</p>
+                                        <p class="well well-sm">php Thelia module:NetReviews:GetProductReview</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h2 class="title title-without-tabs">{intl l="Site reviews" d='netreviews.bo.default'}</h2>
+                                <div class="col-md-12 form-group">
+                                    <div class="form-group">
+                                        <label class="control-label" for="site_widget_code">{intl l="Site widget code :" d='netreviews.bo.default'}</label>
+                                        {form_field field="site_widget_code"}
+                                            <textarea id="site_widget_code" name="{$name}" class="form-control" rows="5">{$value}</textarea>
+                                        {/form_field}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-
                         <div class="col-md-12">
                             <input type="submit" class="btn btn-success form-control">
                         </div>
-                    </form>
-                {/form}
-            </div>
+                    </div>
+                </form>
+            {/form}
         </div>
     </div>
+{/block}
+
+{block name="javascript-initialization"}
+    <script>
+        $(function () {
+            $("#product_review_mode").change(function () {
+               var mode = $(this).val();
+               $(".product_review_mode_form").addClass('hidden');
+               $("#product_"+mode).removeClass('hidden');
+            });
+        });
+    </script>
 {/block}

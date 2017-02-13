@@ -102,7 +102,7 @@ class ProductReviewService
                 'email' => $result['email'],
                 'lastname' => $result['lastname'],
                 'firstname' => $result['firstname'],
-                'review_date' => $result['review_date'],
+                'date' => $result['review_date'],
                 'message' => $result['message'],
                 'rate' => $result['rate'],
                 'exchange' => $result['exchange'],
@@ -117,6 +117,9 @@ class ProductReviewService
             $productReviews['reviews'][$result['product_review_id']]['exchanges'] = $exchanges[$result['product_review_id']];
         }
 
+        $count = count($productReviews['reviews']);
+
+        $productReviews['count'] = $count;
 
         return $productReviews;
     }

@@ -1,0 +1,32 @@
+{product_reviews product_id=$product_id}
+
+{function name=reviews_stars empty=1}
+    {$star='<span class="glyphicon glyphicon-star"></span>'}
+    {$star_empty='<span class="glyphicon glyphicon-star-empty"></span>'}
+
+    {for $foo=0 to 4}
+        {if $value > $foo}
+            {$star nofilter}
+        {elseif $empty == 1}
+            {$star_empty nofilter}
+        {/if}
+    {/for}
+{/function}
+
+<p><strong>{intl l="Review average : %rate/5 based on %count review" rate=$product_reviews.rate count=$product_reviews.count}</strong></p>
+{foreach from=$product_reviews.reviews item=review}
+    <div>
+        <h4>{$review.firstname} {$review.lastname|substr:0:1|strtoupper}. {reviews_stars value=$review.rate} {$review.rate}/5</h4>
+        {$review.date}
+        <p>{$review.message}</p>
+        <p class="well well-sm">
+            {$i=0}
+            {foreach from=$review.exchanges item=exchange}
+                {for $foo=0 to $i}&emsp;{/for}{$exchange.message}
+                <br>
+                {$i = $i+1}
+            {/foreach}
+        </p>
+    </div>
+{/foreach}
+
