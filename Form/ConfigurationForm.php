@@ -44,40 +44,6 @@ class ConfigurationForm extends BaseForm
                 ]
             )
             ->add(
-                "site_widget_code",
-                "text",
-                [
-                    "data" => NetReviews::getConfigValue("site_widget_code"),
-                    "label"=>Translator::getInstance()->trans("Site widget code", array(), NetReviews::DOMAIN_NAME)
-                ]
-            )
-            ->add(
-                "product_iframe_code",
-                "text",
-                [
-                    "data" => NetReviews::getConfigValue("product_iframe_code"),
-                    "label"=>Translator::getInstance()->trans("Product iframe code", array(), NetReviews::DOMAIN_NAME)
-                ]
-            )
-            ->add(
-                "footer_link_title",
-                "text",
-                [
-                    "data" => NetReviews::getConfigValue("footer_link_title"),
-                    "label"=>Translator::getInstance()->trans("Footer link title", array(), NetReviews::DOMAIN_NAME),
-                    "required" => false
-                ]
-            )
-            ->add(
-                "footer_link",
-                "text",
-                [
-                    "data" => NetReviews::getConfigValue("footer_link"),
-                    "label"=>Translator::getInstance()->trans("Footer link", array(), NetReviews::DOMAIN_NAME),
-                    "required" => false
-                ]
-            )
-            ->add(
                 'api_url',
                 'text',
                 [
@@ -104,6 +70,100 @@ class ConfigurationForm extends BaseForm
                     "required" => false,
                     'multiple' => true,
                     'choices'  => $orderStatus
+                ]
+            )
+            ->add(
+                "footer_link_title",
+                "text",
+                [
+                    "data" => NetReviews::getConfigValue("footer_link_title"),
+                    "label"=>Translator::getInstance()->trans("Footer link title", array(), NetReviews::DOMAIN_NAME),
+                    "required" => false
+                ]
+            )
+            ->add(
+                "footer_link",
+                "text",
+                [
+                    "data" => NetReviews::getConfigValue("footer_link"),
+                    "label"=>Translator::getInstance()->trans("Footer link", array(), NetReviews::DOMAIN_NAME),
+                    "required" => false
+                ]
+            )
+            ->add(
+                "ftp_server",
+                "text",
+                [
+                    "data" => NetReviews::getConfigValue("ftp_server"),
+                    "label"=>Translator::getInstance()->trans("Ftp server", array(), NetReviews::DOMAIN_NAME),
+                    "label_attr" => ["for" => "ftp_server"],
+                    "required" => true
+                ]
+            )
+            ->add(
+                "ftp_username",
+                "text",
+                [
+                    "data" => NetReviews::getConfigValue("ftp_username"),
+                    "label"=>Translator::getInstance()->trans("Ftp username", array(), NetReviews::DOMAIN_NAME),
+                    "label_attr" => ["for" => "ftp_username"],
+                    "required" => false
+                ]
+            )
+            ->add(
+                "ftp_password",
+                "text",
+                [
+                    "data" => NetReviews::getConfigValue("ftp_password"),
+                    "label"=>Translator::getInstance()->trans("Ftp password", array(), NetReviews::DOMAIN_NAME),
+                    "required" => false
+                ]
+            )
+            ->add(
+                "ftp_port",
+                "text",
+                [
+                    "data" => NetReviews::getConfigValue("ftp_port"),
+                    "label"=>Translator::getInstance()->trans("Ftp port", array(), NetReviews::DOMAIN_NAME),
+                    "required" => false
+                ]
+            )
+            ->add(
+                "ftp_directory",
+                "text",
+                [
+                    "data" => NetReviews::getConfigValue("ftp_directory"),
+                    "label"=>Translator::getInstance()->trans("Ftp directory", array(), NetReviews::DOMAIN_NAME),
+                    "required" => false
+                ]
+            )
+            ->add(
+                'product_review_mode',
+                'choice',
+                [
+                    "data" => NetReviews::getConfigValue("product_review_mode"),
+                    "label"=>Translator::getInstance()->trans("Product review mode", array(), NetReviews::DOMAIN_NAME),
+                    "required" => false,
+                    'choices'  => [
+                        'ftp'=>'ftp',
+                        'iframe'=>'iframe'
+                    ]
+                ]
+            )
+            ->add(
+                "site_widget_code",
+                "text",
+                [
+                    "data" => NetReviews::getConfigValue("site_widget_code"),
+                    "label"=>Translator::getInstance()->trans("Site widget code", array(), NetReviews::DOMAIN_NAME)
+                ]
+            )
+            ->add(
+                "product_iframe_code",
+                "text",
+                [
+                    "data" => NetReviews::getConfigValue("product_iframe_code"),
+                    "label"=>Translator::getInstance()->trans("Product iframe code", array(), NetReviews::DOMAIN_NAME)
                 ]
             );
     }

@@ -111,30 +111,46 @@ class FrontHook extends BaseHook
         );
     }
 
-    public function displayProductTabIframe(HookRenderBlockEvent $event)
+    public function displayProductTabReview(HookRenderBlockEvent $event)
     {
-        $code = NetReviews::getConfigValue('product_iframe_code');
+        $reviewMode = NetReviews::getConfigValue('product_review_mode');
+        $content = null;
+
         $productId = $event->getArgument('product');
         $product = ProductQuery::create()
             ->findPk($productId);
 
         if (null !== $product) {
-            $content = $this->render(
-                "netreviews/product-iframe.html",
-                [
-                    "product_iframe_code" => $code,
-                    "product_ref" => $product->getRef()
-                ]
-            );
+            if ($reviewMode === 'iframe') {
+                $code = NetReviews::getConfigValue('product_iframe_code');
+                if ($code != null) {
+                    $content = $this->render(
+                        "netreviews/product-iframe.html",
+                        [
+                            "product_iframe_code" => $code,
+                            "product_ref" => $product->getRef()
+                        ]
+                    );
+                }
+            } elseif ($reviewMode === 'ftp') {
+                $content = $this->render(
+                    "netreviews/product-review.html",
+                    [
+                        'product_id' => $productId
+                    ]
+                );
+            }
 
-            $event->add(
-                [
-                    'id' => 'netreviews_tab',
-                    'class' => '',
-                    'title' => $this->trans('Net Reviews', [], NetReviews::DOMAIN_NAME),
-                    'content' => $content
-                ]
-            );
+            if (null != $content) {
+                $event->add(
+                    [
+                        'id' => 'netreviews_tab',
+                        'class' => '',
+                        'title' => $this->trans('Net Reviews', [], NetReviews::DOMAIN_NAME),
+                        'content' => $content
+                    ]
+                );
+            }
         }
     }
 
