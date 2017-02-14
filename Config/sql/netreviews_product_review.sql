@@ -21,6 +21,7 @@ CREATE TABLE `netreviews_product_review`
     `rate` VARCHAR(255),
     `order_ref` VARCHAR(255),
     `product_ref` VARCHAR(255),
+    `product_id` INTEGER,
     `exchange` INTEGER,
     `created_at` DATETIME,
     `updated_at` DATETIME,

@@ -58,7 +58,7 @@ class NetreviewsProductReviewTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 13;
+    const NUM_COLUMNS = 14;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class NetreviewsProductReviewTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 13;
+    const NUM_HYDRATE_COLUMNS = 14;
 
     /**
      * the column name for the PRODUCT_REVIEW_ID field
@@ -121,6 +121,11 @@ class NetreviewsProductReviewTableMap extends TableMap
     const PRODUCT_REF = 'netreviews_product_review.PRODUCT_REF';
 
     /**
+     * the column name for the PRODUCT_ID field
+     */
+    const PRODUCT_ID = 'netreviews_product_review.PRODUCT_ID';
+
+    /**
      * the column name for the EXCHANGE field
      */
     const EXCHANGE = 'netreviews_product_review.EXCHANGE';
@@ -147,12 +152,12 @@ class NetreviewsProductReviewTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('ProductReviewId', 'ReviewId', 'Email', 'Lastname', 'Firstname', 'ReviewDate', 'Message', 'Rate', 'OrderRef', 'ProductRef', 'Exchange', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_STUDLYPHPNAME => array('productReviewId', 'reviewId', 'email', 'lastname', 'firstname', 'reviewDate', 'message', 'rate', 'orderRef', 'productRef', 'exchange', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(NetreviewsProductReviewTableMap::PRODUCT_REVIEW_ID, NetreviewsProductReviewTableMap::REVIEW_ID, NetreviewsProductReviewTableMap::EMAIL, NetreviewsProductReviewTableMap::LASTNAME, NetreviewsProductReviewTableMap::FIRSTNAME, NetreviewsProductReviewTableMap::REVIEW_DATE, NetreviewsProductReviewTableMap::MESSAGE, NetreviewsProductReviewTableMap::RATE, NetreviewsProductReviewTableMap::ORDER_REF, NetreviewsProductReviewTableMap::PRODUCT_REF, NetreviewsProductReviewTableMap::EXCHANGE, NetreviewsProductReviewTableMap::CREATED_AT, NetreviewsProductReviewTableMap::UPDATED_AT, ),
-        self::TYPE_RAW_COLNAME   => array('PRODUCT_REVIEW_ID', 'REVIEW_ID', 'EMAIL', 'LASTNAME', 'FIRSTNAME', 'REVIEW_DATE', 'MESSAGE', 'RATE', 'ORDER_REF', 'PRODUCT_REF', 'EXCHANGE', 'CREATED_AT', 'UPDATED_AT', ),
-        self::TYPE_FIELDNAME     => array('product_review_id', 'review_id', 'email', 'lastname', 'firstname', 'review_date', 'message', 'rate', 'order_ref', 'product_ref', 'exchange', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        self::TYPE_PHPNAME       => array('ProductReviewId', 'ReviewId', 'Email', 'Lastname', 'Firstname', 'ReviewDate', 'Message', 'Rate', 'OrderRef', 'ProductRef', 'ProductId', 'Exchange', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_STUDLYPHPNAME => array('productReviewId', 'reviewId', 'email', 'lastname', 'firstname', 'reviewDate', 'message', 'rate', 'orderRef', 'productRef', 'productId', 'exchange', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(NetreviewsProductReviewTableMap::PRODUCT_REVIEW_ID, NetreviewsProductReviewTableMap::REVIEW_ID, NetreviewsProductReviewTableMap::EMAIL, NetreviewsProductReviewTableMap::LASTNAME, NetreviewsProductReviewTableMap::FIRSTNAME, NetreviewsProductReviewTableMap::REVIEW_DATE, NetreviewsProductReviewTableMap::MESSAGE, NetreviewsProductReviewTableMap::RATE, NetreviewsProductReviewTableMap::ORDER_REF, NetreviewsProductReviewTableMap::PRODUCT_REF, NetreviewsProductReviewTableMap::PRODUCT_ID, NetreviewsProductReviewTableMap::EXCHANGE, NetreviewsProductReviewTableMap::CREATED_AT, NetreviewsProductReviewTableMap::UPDATED_AT, ),
+        self::TYPE_RAW_COLNAME   => array('PRODUCT_REVIEW_ID', 'REVIEW_ID', 'EMAIL', 'LASTNAME', 'FIRSTNAME', 'REVIEW_DATE', 'MESSAGE', 'RATE', 'ORDER_REF', 'PRODUCT_REF', 'PRODUCT_ID', 'EXCHANGE', 'CREATED_AT', 'UPDATED_AT', ),
+        self::TYPE_FIELDNAME     => array('product_review_id', 'review_id', 'email', 'lastname', 'firstname', 'review_date', 'message', 'rate', 'order_ref', 'product_ref', 'product_id', 'exchange', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -162,12 +167,12 @@ class NetreviewsProductReviewTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('ProductReviewId' => 0, 'ReviewId' => 1, 'Email' => 2, 'Lastname' => 3, 'Firstname' => 4, 'ReviewDate' => 5, 'Message' => 6, 'Rate' => 7, 'OrderRef' => 8, 'ProductRef' => 9, 'Exchange' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, ),
-        self::TYPE_STUDLYPHPNAME => array('productReviewId' => 0, 'reviewId' => 1, 'email' => 2, 'lastname' => 3, 'firstname' => 4, 'reviewDate' => 5, 'message' => 6, 'rate' => 7, 'orderRef' => 8, 'productRef' => 9, 'exchange' => 10, 'createdAt' => 11, 'updatedAt' => 12, ),
-        self::TYPE_COLNAME       => array(NetreviewsProductReviewTableMap::PRODUCT_REVIEW_ID => 0, NetreviewsProductReviewTableMap::REVIEW_ID => 1, NetreviewsProductReviewTableMap::EMAIL => 2, NetreviewsProductReviewTableMap::LASTNAME => 3, NetreviewsProductReviewTableMap::FIRSTNAME => 4, NetreviewsProductReviewTableMap::REVIEW_DATE => 5, NetreviewsProductReviewTableMap::MESSAGE => 6, NetreviewsProductReviewTableMap::RATE => 7, NetreviewsProductReviewTableMap::ORDER_REF => 8, NetreviewsProductReviewTableMap::PRODUCT_REF => 9, NetreviewsProductReviewTableMap::EXCHANGE => 10, NetreviewsProductReviewTableMap::CREATED_AT => 11, NetreviewsProductReviewTableMap::UPDATED_AT => 12, ),
-        self::TYPE_RAW_COLNAME   => array('PRODUCT_REVIEW_ID' => 0, 'REVIEW_ID' => 1, 'EMAIL' => 2, 'LASTNAME' => 3, 'FIRSTNAME' => 4, 'REVIEW_DATE' => 5, 'MESSAGE' => 6, 'RATE' => 7, 'ORDER_REF' => 8, 'PRODUCT_REF' => 9, 'EXCHANGE' => 10, 'CREATED_AT' => 11, 'UPDATED_AT' => 12, ),
-        self::TYPE_FIELDNAME     => array('product_review_id' => 0, 'review_id' => 1, 'email' => 2, 'lastname' => 3, 'firstname' => 4, 'review_date' => 5, 'message' => 6, 'rate' => 7, 'order_ref' => 8, 'product_ref' => 9, 'exchange' => 10, 'created_at' => 11, 'updated_at' => 12, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        self::TYPE_PHPNAME       => array('ProductReviewId' => 0, 'ReviewId' => 1, 'Email' => 2, 'Lastname' => 3, 'Firstname' => 4, 'ReviewDate' => 5, 'Message' => 6, 'Rate' => 7, 'OrderRef' => 8, 'ProductRef' => 9, 'ProductId' => 10, 'Exchange' => 11, 'CreatedAt' => 12, 'UpdatedAt' => 13, ),
+        self::TYPE_STUDLYPHPNAME => array('productReviewId' => 0, 'reviewId' => 1, 'email' => 2, 'lastname' => 3, 'firstname' => 4, 'reviewDate' => 5, 'message' => 6, 'rate' => 7, 'orderRef' => 8, 'productRef' => 9, 'productId' => 10, 'exchange' => 11, 'createdAt' => 12, 'updatedAt' => 13, ),
+        self::TYPE_COLNAME       => array(NetreviewsProductReviewTableMap::PRODUCT_REVIEW_ID => 0, NetreviewsProductReviewTableMap::REVIEW_ID => 1, NetreviewsProductReviewTableMap::EMAIL => 2, NetreviewsProductReviewTableMap::LASTNAME => 3, NetreviewsProductReviewTableMap::FIRSTNAME => 4, NetreviewsProductReviewTableMap::REVIEW_DATE => 5, NetreviewsProductReviewTableMap::MESSAGE => 6, NetreviewsProductReviewTableMap::RATE => 7, NetreviewsProductReviewTableMap::ORDER_REF => 8, NetreviewsProductReviewTableMap::PRODUCT_REF => 9, NetreviewsProductReviewTableMap::PRODUCT_ID => 10, NetreviewsProductReviewTableMap::EXCHANGE => 11, NetreviewsProductReviewTableMap::CREATED_AT => 12, NetreviewsProductReviewTableMap::UPDATED_AT => 13, ),
+        self::TYPE_RAW_COLNAME   => array('PRODUCT_REVIEW_ID' => 0, 'REVIEW_ID' => 1, 'EMAIL' => 2, 'LASTNAME' => 3, 'FIRSTNAME' => 4, 'REVIEW_DATE' => 5, 'MESSAGE' => 6, 'RATE' => 7, 'ORDER_REF' => 8, 'PRODUCT_REF' => 9, 'PRODUCT_ID' => 10, 'EXCHANGE' => 11, 'CREATED_AT' => 12, 'UPDATED_AT' => 13, ),
+        self::TYPE_FIELDNAME     => array('product_review_id' => 0, 'review_id' => 1, 'email' => 2, 'lastname' => 3, 'firstname' => 4, 'review_date' => 5, 'message' => 6, 'rate' => 7, 'order_ref' => 8, 'product_ref' => 9, 'product_id' => 10, 'exchange' => 11, 'created_at' => 12, 'updated_at' => 13, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -196,6 +201,7 @@ class NetreviewsProductReviewTableMap extends TableMap
         $this->addColumn('RATE', 'Rate', 'VARCHAR', false, 255, null);
         $this->addColumn('ORDER_REF', 'OrderRef', 'VARCHAR', false, 255, null);
         $this->addColumn('PRODUCT_REF', 'ProductRef', 'VARCHAR', false, 255, null);
+        $this->addColumn('PRODUCT_ID', 'ProductId', 'INTEGER', false, null, null);
         $this->addColumn('EXCHANGE', 'Exchange', 'INTEGER', false, null, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
@@ -379,6 +385,7 @@ class NetreviewsProductReviewTableMap extends TableMap
             $criteria->addSelectColumn(NetreviewsProductReviewTableMap::RATE);
             $criteria->addSelectColumn(NetreviewsProductReviewTableMap::ORDER_REF);
             $criteria->addSelectColumn(NetreviewsProductReviewTableMap::PRODUCT_REF);
+            $criteria->addSelectColumn(NetreviewsProductReviewTableMap::PRODUCT_ID);
             $criteria->addSelectColumn(NetreviewsProductReviewTableMap::EXCHANGE);
             $criteria->addSelectColumn(NetreviewsProductReviewTableMap::CREATED_AT);
             $criteria->addSelectColumn(NetreviewsProductReviewTableMap::UPDATED_AT);
@@ -393,6 +400,7 @@ class NetreviewsProductReviewTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.RATE');
             $criteria->addSelectColumn($alias . '.ORDER_REF');
             $criteria->addSelectColumn($alias . '.PRODUCT_REF');
+            $criteria->addSelectColumn($alias . '.PRODUCT_ID');
             $criteria->addSelectColumn($alias . '.EXCHANGE');
             $criteria->addSelectColumn($alias . '.CREATED_AT');
             $criteria->addSelectColumn($alias . '.UPDATED_AT');

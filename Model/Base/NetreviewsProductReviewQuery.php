@@ -31,6 +31,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildNetreviewsProductReviewQuery orderByRate($order = Criteria::ASC) Order by the rate column
  * @method     ChildNetreviewsProductReviewQuery orderByOrderRef($order = Criteria::ASC) Order by the order_ref column
  * @method     ChildNetreviewsProductReviewQuery orderByProductRef($order = Criteria::ASC) Order by the product_ref column
+ * @method     ChildNetreviewsProductReviewQuery orderByProductId($order = Criteria::ASC) Order by the product_id column
  * @method     ChildNetreviewsProductReviewQuery orderByExchange($order = Criteria::ASC) Order by the exchange column
  * @method     ChildNetreviewsProductReviewQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildNetreviewsProductReviewQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
@@ -45,6 +46,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildNetreviewsProductReviewQuery groupByRate() Group by the rate column
  * @method     ChildNetreviewsProductReviewQuery groupByOrderRef() Group by the order_ref column
  * @method     ChildNetreviewsProductReviewQuery groupByProductRef() Group by the product_ref column
+ * @method     ChildNetreviewsProductReviewQuery groupByProductId() Group by the product_id column
  * @method     ChildNetreviewsProductReviewQuery groupByExchange() Group by the exchange column
  * @method     ChildNetreviewsProductReviewQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildNetreviewsProductReviewQuery groupByUpdatedAt() Group by the updated_at column
@@ -70,6 +72,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildNetreviewsProductReview findOneByRate(string $rate) Return the first ChildNetreviewsProductReview filtered by the rate column
  * @method     ChildNetreviewsProductReview findOneByOrderRef(string $order_ref) Return the first ChildNetreviewsProductReview filtered by the order_ref column
  * @method     ChildNetreviewsProductReview findOneByProductRef(string $product_ref) Return the first ChildNetreviewsProductReview filtered by the product_ref column
+ * @method     ChildNetreviewsProductReview findOneByProductId(int $product_id) Return the first ChildNetreviewsProductReview filtered by the product_id column
  * @method     ChildNetreviewsProductReview findOneByExchange(int $exchange) Return the first ChildNetreviewsProductReview filtered by the exchange column
  * @method     ChildNetreviewsProductReview findOneByCreatedAt(string $created_at) Return the first ChildNetreviewsProductReview filtered by the created_at column
  * @method     ChildNetreviewsProductReview findOneByUpdatedAt(string $updated_at) Return the first ChildNetreviewsProductReview filtered by the updated_at column
@@ -84,6 +87,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     array findByRate(string $rate) Return ChildNetreviewsProductReview objects filtered by the rate column
  * @method     array findByOrderRef(string $order_ref) Return ChildNetreviewsProductReview objects filtered by the order_ref column
  * @method     array findByProductRef(string $product_ref) Return ChildNetreviewsProductReview objects filtered by the product_ref column
+ * @method     array findByProductId(int $product_id) Return ChildNetreviewsProductReview objects filtered by the product_id column
  * @method     array findByExchange(int $exchange) Return ChildNetreviewsProductReview objects filtered by the exchange column
  * @method     array findByCreatedAt(string $created_at) Return ChildNetreviewsProductReview objects filtered by the created_at column
  * @method     array findByUpdatedAt(string $updated_at) Return ChildNetreviewsProductReview objects filtered by the updated_at column
@@ -175,7 +179,7 @@ abstract class NetreviewsProductReviewQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT PRODUCT_REVIEW_ID, REVIEW_ID, EMAIL, LASTNAME, FIRSTNAME, REVIEW_DATE, MESSAGE, RATE, ORDER_REF, PRODUCT_REF, EXCHANGE, CREATED_AT, UPDATED_AT FROM netreviews_product_review WHERE PRODUCT_REVIEW_ID = :p0';
+        $sql = 'SELECT PRODUCT_REVIEW_ID, REVIEW_ID, EMAIL, LASTNAME, FIRSTNAME, REVIEW_DATE, MESSAGE, RATE, ORDER_REF, PRODUCT_REF, PRODUCT_ID, EXCHANGE, CREATED_AT, UPDATED_AT FROM netreviews_product_review WHERE PRODUCT_REVIEW_ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_STR);
@@ -566,6 +570,47 @@ abstract class NetreviewsProductReviewQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(NetreviewsProductReviewTableMap::PRODUCT_REF, $productRef, $comparison);
+    }
+
+    /**
+     * Filter the query on the product_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByProductId(1234); // WHERE product_id = 1234
+     * $query->filterByProductId(array(12, 34)); // WHERE product_id IN (12, 34)
+     * $query->filterByProductId(array('min' => 12)); // WHERE product_id > 12
+     * </code>
+     *
+     * @param     mixed $productId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildNetreviewsProductReviewQuery The current query, for fluid interface
+     */
+    public function filterByProductId($productId = null, $comparison = null)
+    {
+        if (is_array($productId)) {
+            $useMinMax = false;
+            if (isset($productId['min'])) {
+                $this->addUsingAlias(NetreviewsProductReviewTableMap::PRODUCT_ID, $productId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($productId['max'])) {
+                $this->addUsingAlias(NetreviewsProductReviewTableMap::PRODUCT_ID, $productId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(NetreviewsProductReviewTableMap::PRODUCT_ID, $productId, $comparison);
     }
 
     /**

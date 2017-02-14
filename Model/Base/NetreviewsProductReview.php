@@ -118,6 +118,12 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
     protected $product_ref;
 
     /**
+     * The value for the product_id field.
+     * @var        int
+     */
+    protected $product_id;
+
+    /**
      * The value for the exchange field.
      * @var        int
      */
@@ -533,6 +539,17 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
     }
 
     /**
+     * Get the [product_id] column value.
+     *
+     * @return   int
+     */
+    public function getProductId()
+    {
+
+        return $this->product_id;
+    }
+
+    /**
      * Get the [exchange] column value.
      *
      * @return   int
@@ -794,6 +811,27 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
     } // setProductRef()
 
     /**
+     * Set the value of [product_id] column.
+     *
+     * @param      int $v new value
+     * @return   \NetReviews\Model\NetreviewsProductReview The current object (for fluent API support)
+     */
+    public function setProductId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->product_id !== $v) {
+            $this->product_id = $v;
+            $this->modifiedColumns[NetreviewsProductReviewTableMap::PRODUCT_ID] = true;
+        }
+
+
+        return $this;
+    } // setProductId()
+
+    /**
      * Set the value of [exchange] column.
      *
      * @param      int $v new value
@@ -926,16 +964,19 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : NetreviewsProductReviewTableMap::translateFieldName('ProductRef', TableMap::TYPE_PHPNAME, $indexType)];
             $this->product_ref = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : NetreviewsProductReviewTableMap::translateFieldName('Exchange', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : NetreviewsProductReviewTableMap::translateFieldName('ProductId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->product_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : NetreviewsProductReviewTableMap::translateFieldName('Exchange', TableMap::TYPE_PHPNAME, $indexType)];
             $this->exchange = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : NetreviewsProductReviewTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : NetreviewsProductReviewTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : NetreviewsProductReviewTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : NetreviewsProductReviewTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -948,7 +989,7 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 13; // 13 = NetreviewsProductReviewTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 14; // 14 = NetreviewsProductReviewTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating \NetReviews\Model\NetreviewsProductReview object", 0, $e);
@@ -1213,6 +1254,9 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
         if ($this->isColumnModified(NetreviewsProductReviewTableMap::PRODUCT_REF)) {
             $modifiedColumns[':p' . $index++]  = 'PRODUCT_REF';
         }
+        if ($this->isColumnModified(NetreviewsProductReviewTableMap::PRODUCT_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'PRODUCT_ID';
+        }
         if ($this->isColumnModified(NetreviewsProductReviewTableMap::EXCHANGE)) {
             $modifiedColumns[':p' . $index++]  = 'EXCHANGE';
         }
@@ -1262,6 +1306,9 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
                         break;
                     case 'PRODUCT_REF':
                         $stmt->bindValue($identifier, $this->product_ref, PDO::PARAM_STR);
+                        break;
+                    case 'PRODUCT_ID':
+                        $stmt->bindValue($identifier, $this->product_id, PDO::PARAM_INT);
                         break;
                     case 'EXCHANGE':
                         $stmt->bindValue($identifier, $this->exchange, PDO::PARAM_INT);
@@ -1358,12 +1405,15 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
                 return $this->getProductRef();
                 break;
             case 10:
-                return $this->getExchange();
+                return $this->getProductId();
                 break;
             case 11:
-                return $this->getCreatedAt();
+                return $this->getExchange();
                 break;
             case 12:
+                return $this->getCreatedAt();
+                break;
+            case 13:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1405,9 +1455,10 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
             $keys[7] => $this->getRate(),
             $keys[8] => $this->getOrderRef(),
             $keys[9] => $this->getProductRef(),
-            $keys[10] => $this->getExchange(),
-            $keys[11] => $this->getCreatedAt(),
-            $keys[12] => $this->getUpdatedAt(),
+            $keys[10] => $this->getProductId(),
+            $keys[11] => $this->getExchange(),
+            $keys[12] => $this->getCreatedAt(),
+            $keys[13] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1483,12 +1534,15 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
                 $this->setProductRef($value);
                 break;
             case 10:
-                $this->setExchange($value);
+                $this->setProductId($value);
                 break;
             case 11:
-                $this->setCreatedAt($value);
+                $this->setExchange($value);
                 break;
             case 12:
+                $this->setCreatedAt($value);
+                break;
+            case 13:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1525,9 +1579,10 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
         if (array_key_exists($keys[7], $arr)) $this->setRate($arr[$keys[7]]);
         if (array_key_exists($keys[8], $arr)) $this->setOrderRef($arr[$keys[8]]);
         if (array_key_exists($keys[9], $arr)) $this->setProductRef($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setExchange($arr[$keys[10]]);
-        if (array_key_exists($keys[11], $arr)) $this->setCreatedAt($arr[$keys[11]]);
-        if (array_key_exists($keys[12], $arr)) $this->setUpdatedAt($arr[$keys[12]]);
+        if (array_key_exists($keys[10], $arr)) $this->setProductId($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setExchange($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setCreatedAt($arr[$keys[12]]);
+        if (array_key_exists($keys[13], $arr)) $this->setUpdatedAt($arr[$keys[13]]);
     }
 
     /**
@@ -1549,6 +1604,7 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
         if ($this->isColumnModified(NetreviewsProductReviewTableMap::RATE)) $criteria->add(NetreviewsProductReviewTableMap::RATE, $this->rate);
         if ($this->isColumnModified(NetreviewsProductReviewTableMap::ORDER_REF)) $criteria->add(NetreviewsProductReviewTableMap::ORDER_REF, $this->order_ref);
         if ($this->isColumnModified(NetreviewsProductReviewTableMap::PRODUCT_REF)) $criteria->add(NetreviewsProductReviewTableMap::PRODUCT_REF, $this->product_ref);
+        if ($this->isColumnModified(NetreviewsProductReviewTableMap::PRODUCT_ID)) $criteria->add(NetreviewsProductReviewTableMap::PRODUCT_ID, $this->product_id);
         if ($this->isColumnModified(NetreviewsProductReviewTableMap::EXCHANGE)) $criteria->add(NetreviewsProductReviewTableMap::EXCHANGE, $this->exchange);
         if ($this->isColumnModified(NetreviewsProductReviewTableMap::CREATED_AT)) $criteria->add(NetreviewsProductReviewTableMap::CREATED_AT, $this->created_at);
         if ($this->isColumnModified(NetreviewsProductReviewTableMap::UPDATED_AT)) $criteria->add(NetreviewsProductReviewTableMap::UPDATED_AT, $this->updated_at);
@@ -1625,6 +1681,7 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
         $copyObj->setRate($this->getRate());
         $copyObj->setOrderRef($this->getOrderRef());
         $copyObj->setProductRef($this->getProductRef());
+        $copyObj->setProductId($this->getProductId());
         $copyObj->setExchange($this->getExchange());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
@@ -1918,6 +1975,7 @@ abstract class NetreviewsProductReview implements ActiveRecordInterface
         $this->rate = null;
         $this->order_ref = null;
         $this->product_ref = null;
+        $this->product_id = null;
         $this->exchange = null;
         $this->created_at = null;
         $this->updated_at = null;
