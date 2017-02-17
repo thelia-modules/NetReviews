@@ -165,7 +165,20 @@ class ConfigurationForm extends BaseForm
                     "data" => NetReviews::getConfigValue("product_iframe_code"),
                     "label"=>Translator::getInstance()->trans("Product iframe code", array(), NetReviews::DOMAIN_NAME)
                 ]
-            );
+            )
+            ->add(
+                "display_product_review_exchanges",
+                'choice',
+                [
+                    "data" => NetReviews::getConfigValue("display_product_review_exchanges"),
+                    "required" => false,
+                    'choices'  => [
+                        'true' => 'true',
+                        'false' => 'false'
+                    ]
+                ]
+            )
+        ;
     }
 
     public function getName()

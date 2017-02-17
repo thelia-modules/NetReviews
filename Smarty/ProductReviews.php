@@ -2,6 +2,7 @@
 
 namespace NetReviews\Smarty;
 
+use NetReviews\NetReviews;
 use NetReviews\Service\ProductReviewService;
 use TheliaSmarty\Template\AbstractSmartyPlugin;
 use TheliaSmarty\Template\SmartyPluginDescriptor;
@@ -32,7 +33,9 @@ class ProductReviews extends AbstractSmartyPlugin
         if (isset($params['product_id'])) {
             $productId = $params['product_id'];
 
-            $reviews = $this->productReviewService->getProductReviews($productId);
+            $getExchanges = NetReviews::getConfigValue('display_product_review_exchanges', 'true') === 'true'? true: false;;
+
+            $reviews = $this->productReviewService->getProductReviews($productId, $getExchanges);
 
             $smarty->assign('product_reviews', $reviews);
         }

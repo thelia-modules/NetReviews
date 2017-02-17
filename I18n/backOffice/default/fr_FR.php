@@ -1,12 +1,28 @@
 <?php
 
 return array(
+    '1) Configure ftp export in netreviews backoffice' => '1) Configurer les exports ftp dans le back-office d\'Avis vérifiés',
+    '2) Add a cron with this command : ' => '2) Ajouter un cron avec cette commande :',
+    'Display product review exchanges' => 'Afficher les échanges',
+    'Display product review throught the netreviews iframe' => 'Afficher les avis produit par l\'iframe d\'Avis vérifiés',
+    'Footer link' => 'Lien du footer',
+    'Ftp configuration' => 'Configuration Ftp',
+    'Ftp password :' => 'Mot de psse Ftp :',
+    'Import reviews by ftp and display it with templates' => 'Importer les avis par ftp et les afficher avec les templates',
     'NetReviews configuration' => 'Configuration d\'Avis vérifiés ',
     'NetReviews module configuration' => 'Configuration du module Avis vérifiés',
+    'Netreviews access' => 'Accès avis vérifiés',
+    'No' => 'Non',
     'Order sent on %date at %time click here to send again' => 'Commande envoyée le %date à %time, cliquez ici pour envoyer à nouveau',
     'Platform language :' => 'Langue de la plateforme :',
+    'Please select a review mode' => 'Sélectionner un mode d\'avis',
     'Product iframe code :' => 'Code de l\'iframe de produit :',
+    'Product review mode :' => 'Mode d\'avis produit',
+    'Product reviews' => 'Avis produit',
     'Send' => 'Envoyer',
     'Send order to NetReviews' => 'Envoyer la commande a Avis Vérifiés',
+    'Sending orders configuration' => 'Configuration d\'envois des commandes',
+    'Site reviews' => 'Avis site',
     'Site widget code :' => 'Code du widget site :',
+    'Yes' => 'Oui',
 );

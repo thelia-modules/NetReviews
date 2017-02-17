@@ -33,21 +33,21 @@ class ConfigurationController extends BaseAdminController
         try {
             $data = $this->validateForm($form)->getData();
 
-            NetReviews::setConfigValue('id_website', $data['id_website']);
-            NetReviews::setConfigValue('secret_token', $data['secret_token']);
-            NetReviews::setConfigValue('site_widget_code', $data['site_widget_code']);
-            NetReviews::setConfigValue('product_iframe_code', $data['product_iframe_code']);
-            NetReviews::setConfigValue('footer_link_title', $data['footer_link_title']);
-            NetReviews::setConfigValue('footer_link', $data['footer_link']);
-            NetReviews::setConfigValue('api_url', $data['api_url']);
-            NetReviews::setConfigValue('email_delay', $data['email_delay']);
-            NetReviews::setConfigValue('status_to_export', implode(',', $data['status_to_export']));
-            NetReviews::setConfigValue('ftp_server', $data['ftp_server']);
-            NetReviews::setConfigValue('ftp_username', $data['ftp_username']);
-            NetReviews::setConfigValue('ftp_password', $data['ftp_password']);
-            NetReviews::setConfigValue('ftp_port', $data['ftp_port']);
-            NetReviews::setConfigValue('ftp_directory', $data['ftp_directory']);
-            NetReviews::setConfigValue('product_review_mode', $data['product_review_mode']);
+            $excludeData = [
+                'secret_token',
+                'success_url',
+                'error_url',
+                'error_message',
+                'status_to_export'
+            ];
+
+            foreach ($data as $key => $value) {
+                if (!in_array($key, $excludeData)) {
+                    NetReviews::setConfigValue($key, $value);
+                } elseif ($key === 'status_to_export') {
+                    NetReviews::setConfigValue('status_to_export', implode(',', $value));
+                }
+            }
         } catch (\Exception $e) {
             $this->setupFormErrorContext(
                 Translator::getInstance()->trans(

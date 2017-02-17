@@ -84,7 +84,7 @@ class ProductReviewService
         }
     }
 
-    public function getProductReviews($productId)
+    public function getProductReviews($productId, $withExchanges = true)
     {
         /** @var SqlConnectionInterface $con */
         $con = Propel::getConnection();
@@ -113,13 +113,15 @@ class ProductReviewService
                 'exchange' => $result['exchange'],
             ];
 
-            $exchanges[$result['product_review_id']][] = [
-                'date' => $result['exchange_date'],
-                'who' => $result['exchange_who'],
-                'message' => $result['exchange_message']
-            ];
+            if (true == $withExchanges) {
+                $exchanges[$result['product_review_id']][] = [
+                    'date' => $result['exchange_date'],
+                    'who' => $result['exchange_who'],
+                    'message' => $result['exchange_message']
+                ];
 
-            $productReviews['reviews'][$result['product_review_id']]['exchanges'] = $exchanges[$result['product_review_id']];
+                $productReviews['reviews'][$result['product_review_id']]['exchanges'] = $exchanges[$result['product_review_id']];
+            }
         }
 
         $count = count($productReviews['reviews']);

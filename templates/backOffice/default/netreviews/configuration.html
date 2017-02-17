@@ -117,6 +117,16 @@
                                         <p>{intl l="1) Configure ftp export in netreviews backoffice"}</p>
                                         <p>{intl l="2) Add a cron with this command : "}</p>
                                         <p class="well well-sm">php Thelia module:NetReviews:GetProductReview</p>
+                                        <div class="form-group">
+                                            <label for="display_product_review_exchanges">{intl l="Display product review exchanges" d='netreviews.bo.default'}</label>
+                                            {form_field field="display_product_review_exchanges"}
+                                            {$display_product_review_exchanges = $data}
+                                                <select id="display_product_review_exchanges" name="{$name}" class="form-control">
+                                                    <option {if $display_product_review_exchanges == 'true'}selected{/if} value='true'>{intl l="Yes" d='netreviews.bo.default'}</option>
+                                                    <option {if $display_product_review_exchanges == 'false'}selected{/if} value='false'>{intl l="No" d='netreviews.bo.default'}</option>
+                                                </select>
+                                            {/form_field}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
