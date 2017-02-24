@@ -14,14 +14,24 @@ class ProductReviewService
 {
     public function getFile($filename = null)
     {
-        $ftpHost = NetReviews::getConfigValue('ftp_server');
-        $ftpUsername = NetReviews::getConfigValue('ftp_username');
-        $ftpPassword = NetReviews::getConfigValue('ftp_password');
-        $ftpPort = NetReviews::getConfigValue('ftp_port', 21);
-        $ftpDirectory = NetReviews::getConfigValue('ftp_directory', '/');
+        $getReviewMode = NetReviews::getConfigValue('get_review_mode');
+
+        if (null == $getReviewMode) {
+            throw new \Exception('You need to choose a get review mode before import');
+        }
 
         $finder = new Finder();
-        $finder->files()->in("ftp://$ftpUsername:$ftpPassword@$ftpHost:$ftpPort$ftpDirectory")->depth('== 0');
+
+        if ($getReviewMode == 'ftp') {
+            $ftpHost = NetReviews::getConfigValue('ftp_server');
+            $ftpUsername = NetReviews::getConfigValue('ftp_username');
+            $ftpPassword = NetReviews::getConfigValue('ftp_password');
+            $ftpPort = NetReviews::getConfigValue('ftp_port', 21);
+            $ftpDirectory = NetReviews::getConfigValue('ftp_directory', '/');
+            $finder->files()->in("ftp://$ftpUsername:$ftpPassword@$ftpHost:$ftpPort$ftpDirectory")->depth('== 0');
+        } elseif ($getReviewMode == 'local') {
+            $finder->files()->in(THELIA_ROOT.NetReviews::getConfigValue('review_local_path'))->depth('== 0');
+        }
 
         if ($filename) {
             $finder->name($filename);

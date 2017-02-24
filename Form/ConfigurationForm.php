@@ -91,13 +91,36 @@ class ConfigurationForm extends BaseForm
                 ]
             )
             ->add(
+                "get_review_mode",
+                'choice',
+                [
+                    "data" => NetReviews::getConfigValue("get_review_mode"),
+                    "label"=>Translator::getInstance()->trans("Get review mode", array(), NetReviews::DOMAIN_NAME),
+                    "required" => false,
+                    'choices'  => [
+                        'ftp'=>'ftp',
+                        'local'=>'local'
+                    ]
+                ]
+            )
+            ->add(
+                "review_local_path",
+                "text",
+                [
+                    "data" => NetReviews::getConfigValue("review_local_path"),
+                    "label"=>Translator::getInstance()->trans("Review local path", array(), NetReviews::DOMAIN_NAME),
+                    "label_attr" => ["for" => "review_local_path"],
+                    "required" => false
+                ]
+            )
+            ->add(
                 "ftp_server",
                 "text",
                 [
                     "data" => NetReviews::getConfigValue("ftp_server"),
                     "label"=>Translator::getInstance()->trans("Ftp server", array(), NetReviews::DOMAIN_NAME),
                     "label_attr" => ["for" => "ftp_server"],
-                    "required" => true
+                    "required" => false
                 ]
             )
             ->add(
@@ -145,7 +168,7 @@ class ConfigurationForm extends BaseForm
                     "label"=>Translator::getInstance()->trans("Product review mode", array(), NetReviews::DOMAIN_NAME),
                     "required" => false,
                     'choices'  => [
-                        'ftp'=>'ftp',
+                        'custom'=>'custom',
                         'iframe'=>'iframe'
                     ]
                 ]

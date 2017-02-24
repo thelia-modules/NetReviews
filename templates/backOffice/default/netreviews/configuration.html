@@ -77,19 +77,45 @@
                         </div>
                         <div class="row">
                             <div class="col-md-4">
-                                <h2 class="title title-without-tabs">{intl l="Ftp configuration" d='netreviews.bo.default'}</h2>
-                                {render_form_field form=$form field="ftp_server" value={$data}}
+                                <h2 class="title title-without-tabs">{intl l="Reviews" d='netreviews.bo.default'}</h2>
+                                <div class="col-md-12 form-group">
+                                    <div class="form-group">
+                                        <label for="product_review_mode">{intl l="Get review mode :" d='netreviews.bo.default'}</label>
+                                        {form_field field="get_review_mode"}
+                                        {$get_review_mode = $data}
+                                            <select id="get_review_mode" name="{$name}" class="form-control">
+                                                <option selected="true" disabled="true">{intl l="Please select how to get reviews" d='netreviews.bo.default'}</option>
+                                                <option {if $get_review_mode == 'ftp'}selected{/if} value="ftp">{intl l="Download review throught ftp" d='netreviews.bo.default'}</option>
+                                                <option {if $get_review_mode == 'local'}selected{/if} value="local">{intl l="Get file in this server" d='netreviews.bo.default'}</option>
+                                            </select>
+                                        {/form_field}
+                                    </div>
+                                    <div id="review_ftp" class="get_review_mode_form {if $get_review_mode !== 'ftp'}hidden{/if}">
+                                        <div class="form-group">
+                                            {render_form_field form=$form field="ftp_server" value={$data}}
 
-                                {render_form_field form=$form field="ftp_username" value={$data}}
+                                            {render_form_field form=$form field="ftp_username" value={$data}}
 
-                                {form_field form=$form field='ftp_password'}
-                                    <label class="control-label" for="ftp_password">{intl l="Ftp password :" d='netreviews.bo.default'}</label>
-                                    <input class="form-control" id="ftp_password" type="password" name="{$name}" value="{$data}"/>
-                                {/form_field}
+                                            {form_field form=$form field='ftp_password'}
+                                                <label class="control-label" for="ftp_password">{intl l="Ftp password :" d='netreviews.bo.default'}</label>
+                                                <input class="form-control" id="ftp_password" type="password" name="{$name}" value="{$data}"/>
+                                            {/form_field}
 
-                                {render_form_field form=$form field="ftp_port" value={$data}}
+                                            {render_form_field form=$form field="ftp_port" value={$data}}
 
-                                {render_form_field form=$form field="ftp_directory" value={$data}}
+                                            {render_form_field form=$form field="ftp_directory" value={$data}}
+                                        </div>
+                                    </div>
+                                    <div id="review_local" class="get_review_mode_form {if $get_review_mode !== 'local'}hidden{/if}">
+                                        {form_field field="review_local_path"}
+                                            <label class="control-label" for="review_local_path">{$label}</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">{$smarty.const.THELIA_ROOT}</span>
+                                                <input class="form-control" id="review_local_path" type="text" name="{$name}" value="{$data}"/>
+                                            </div>
+                                        {/form_field}
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <h2 class="title title-without-tabs">{intl l="Product reviews" d='netreviews.bo.default'}</h2>
@@ -101,7 +127,7 @@
                                             <select id="product_review_mode" name="{$name}" class="form-control">
                                                 <option selected="true" disabled="true">{intl l="Please select a review mode" d='netreviews.bo.default'}</option>
                                                 <option {if $product_review_mode == 'iframe'}selected{/if} value="iframe">{intl l="Display product review throught the netreviews iframe" d='netreviews.bo.default'}</option>
-                                                <option {if $product_review_mode == 'ftp'}selected{/if} value="ftp">{intl l="Import reviews by ftp and display it with templates" d='netreviews.bo.default'}</option>
+                                                <option {if $product_review_mode == 'custom'}selected{/if} value="custom">{intl l="Import reviews in database and display it with templates" d='netreviews.bo.default'}</option>
                                             </select>
                                         {/form_field}
                                     </div>
@@ -113,7 +139,7 @@
                                             {/form_field}
                                         </div>
                                     </div>
-                                    <div id="product_ftp" class="product_review_mode_form {if $product_review_mode !== 'ftp'}hidden{/if}">
+                                    <div id="product_custom" class="product_review_mode_form {if $product_review_mode !== 'custom'}hidden{/if}">
                                         <p>{intl l="1) Configure ftp export in netreviews backoffice"}</p>
                                         <p>{intl l="2) Add a cron with this command : "}</p>
                                         <p class="well well-sm">php Thelia module:NetReviews:GetProductReview</p>
@@ -159,6 +185,12 @@
                var mode = $(this).val();
                $(".product_review_mode_form").addClass('hidden');
                $("#product_"+mode).removeClass('hidden');
+            });
+
+            $("#get_review_mode").change(function () {
+               var mode = $(this).val();
+               $(".get_review_mode_form").addClass('hidden');
+               $("#review_"+mode).removeClass('hidden');
             });
         });
     </script>

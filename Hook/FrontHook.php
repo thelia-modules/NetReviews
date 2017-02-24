@@ -132,7 +132,7 @@ class FrontHook extends BaseHook
                         ]
                     );
                 }
-            } elseif ($reviewMode === 'ftp') {
+            } elseif ($reviewMode === 'custom') {
                 $content = $this->render(
                     "netreviews/product-review.html",
                     [
