@@ -25,8 +25,6 @@ class NetReviews extends BaseModule
     /** @var string */
     const DOMAIN_NAME = 'netreviews';
 
-    const DEBUG_MODE = 1;
-
     public function postActivation(ConnectionInterface $con = null)
     {
         try {

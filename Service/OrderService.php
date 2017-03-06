@@ -37,7 +37,7 @@ class OrderService
 
         $apiUrl = NetReviews::getConfigValue('api_url');
 
-        $debug = NetReviews::DEBUG_MODE;
+        $debug = NetReviews::getConfigValue('debug_mode', 0);
 
         if (1 == $debug) {
             $apiUrl = self::DEBUG_API_URL;
