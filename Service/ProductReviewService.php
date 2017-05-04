@@ -80,18 +80,27 @@ class ProductReviewService
         }
     }
 
-    public function addExchanges($reviewId, $exchanges)
+    public function addExchanges($reviewId, $exchangeArray)
     {
-        foreach ($exchanges as $exchange) {
-            $exchangeData = NetreviewsProductReviewExchangeQuery::create()
-                ->filterByProductReviewId($reviewId)
-                ->filterByDate($exchange['date'])
-                ->filterByWho($exchange['author'])
-                ->filterByMessage($exchange['comment'])
-                ->findOneOrCreate();
-
-            $exchangeData->save();
+        if (isset($exchangeArray['date'])) {
+            $this->addExchange($reviewId, $exchangeArray);
+        } else {
+            foreach ($exchangeArray as $exchange) {
+                $this->addExchange($reviewId, $exchange);
+            }
         }
+    }
+
+    protected function addExchange($reviewId, $exchange)
+    {
+        $exchangeData = NetreviewsProductReviewExchangeQuery::create()
+            ->filterByProductReviewId($reviewId)
+            ->filterByDate($exchange['date'])
+            ->filterByWho($exchange['author'])
+            ->filterByMessage($exchange['comment'])
+            ->findOneOrCreate();
+
+        $exchangeData->save();
     }
 
     public function getProductReviews($productId, $withExchanges = true)
@@ -147,8 +156,7 @@ class ProductReviewService
      */
     public function xmlToArray($xml)
     {
-        $result = "";
-
+        $result = [];
         $this->normalizeSimpleXML(simplexml_load_string($xml, null, LIBXML_NOCDATA), $result);
         return $result;
     }

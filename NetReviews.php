@@ -25,6 +25,8 @@ class NetReviews extends BaseModule
     /** @var string */
     const DOMAIN_NAME = 'netreviews';
 
+    const LAST_IMPORT_KEY = 'last_reviews_import';
+
     public function postActivation(ConnectionInterface $con = null)
     {
         try {
