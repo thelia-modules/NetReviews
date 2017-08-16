@@ -39,11 +39,14 @@
                             <div class="col-md-4">
                                 <h2 class="title title-without-tabs">{intl l="Netreviews access" d='netreviews.bo.default'}</h2>
                                 <div class="col-md-12 form-group">
+                                    {$data = null}
                                     {render_form_field form=$form field="id_website" value={$data}}
+                                    {$data = null}
                                     {render_form_field form=$form field="secret_token" value={$data}}
                                     <label for="api_url">{intl l="Platform language :" d='netreviews.bo.default'}</label>
                                     {form_field field="api_url"}
                                         <select id="api_url" name="{$name}" class="form-control">
+                                            <option value="preprod.avis-verifies.com" {if $data == "www.avis-verifies.com"}selected{/if}>FR</option>
                                             <option value="www.avis-verifies.com" {if $data == "www.avis-verifies.com"}selected{/if}>FR</option>
                                             <option value="www.opiniones-verificadas.com" {if $data == "www.opiniones-verificadas.com"}selected{/if}>ES</option>
                                             <option value="www.echte-bewertungen.com" {if $data == "www.echte-bewertungen.com"}selected{/if}>DE</option>
@@ -58,66 +61,42 @@
                                             <option value="www.opiniones-verificadas.com.mx" {if $data == "www.opiniones-verificadas.com.mx"}selected{/if}>MX</option>
                                         </select>
                                     {/form_field}
+                                        <label for="debug_mode">{intl l="Debug mode :" d='netreviews.bo.default'}</label>
+                                        {form_field field="debug_mode"}
+                                        {$debug_mode = $data}
+                                            <select id="debug_mode" name="{$name}" class="form-control">
+                                                <option {if $debug_mode == 'true'}selected{/if} value='true'>{intl l="Yes" d='netreviews.bo.default'}</option>
+                                                <option {if $debug_mode == 'false'}selected{/if} value='false'>{intl l="No" d='netreviews.bo.default'}</option>
+                                            </select>
+                                        {/form_field}
                                 </div>
+
                             </div>
+
                             <div class="col-md-4">
                                 <h2 class="title title-without-tabs">{intl l="Sending orders configuration" d='netreviews.bo.default'}</h2>
                                 <div class="col-md-12 form-group">
+                                    {$data = null}
                                     {render_form_field form=$form field="email_delay" value={$data}}
+                                    <p>{intl l="Add this cron to export order automatically :" d='netreviews.bo.default'}</p>
+                                    <p class="well well-sm">php Thelia module:NetReviews:SendOrder</p>
+                                    <p>{intl l="And choose which status will be exported" d='netreviews.bo.default'}</p>
+                                    {$data = null}
                                     {render_form_field form=$form field="status_to_export" value={$data}}
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <h2 class="title title-without-tabs">{intl l="Footer link" d='netreviews.bo.default'}</h2>
                                 <div class="col-md-12 form-group">
+                                    {$data = null}
                                     {render_form_field form=$form field="footer_link_title" value={$data}}
+                                    {$data = null}
                                     {render_form_field form=$form field="footer_link" value={$data}}
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4">
-                                <h2 class="title title-without-tabs">{intl l="Reviews" d='netreviews.bo.default'}</h2>
-                                <div class="col-md-12 form-group">
-                                    <div class="form-group">
-                                        <label for="product_review_mode">{intl l="Get review mode :" d='netreviews.bo.default'}</label>
-                                        {form_field field="get_review_mode"}
-                                        {$get_review_mode = $data}
-                                            <select id="get_review_mode" name="{$name}" class="form-control">
-                                                <option selected="true" disabled="true">{intl l="Please select how to get reviews" d='netreviews.bo.default'}</option>
-                                                <option {if $get_review_mode == 'ftp'}selected{/if} value="ftp">{intl l="Download review throught ftp" d='netreviews.bo.default'}</option>
-                                                <option {if $get_review_mode == 'local'}selected{/if} value="local">{intl l="Get file in this server" d='netreviews.bo.default'}</option>
-                                            </select>
-                                        {/form_field}
-                                    </div>
-                                    <div id="review_ftp" class="get_review_mode_form {if $get_review_mode !== 'ftp'}hidden{/if}">
-                                        <div class="form-group">
-                                            {render_form_field form=$form field="ftp_server" value={$data}}
-
-                                            {render_form_field form=$form field="ftp_username" value={$data}}
-
-                                            {form_field form=$form field='ftp_password'}
-                                                <label class="control-label" for="ftp_password">{intl l="Ftp password :" d='netreviews.bo.default'}</label>
-                                                <input class="form-control" id="ftp_password" type="password" name="{$name}" value="{$data}"/>
-                                            {/form_field}
-
-                                            {render_form_field form=$form field="ftp_port" value={$data}}
-
-                                            {render_form_field form=$form field="ftp_directory" value={$data}}
-                                        </div>
-                                    </div>
-                                    <div id="review_local" class="get_review_mode_form {if $get_review_mode !== 'local'}hidden{/if}">
-                                        {form_field field="review_local_path"}
-                                            <label class="control-label" for="review_local_path">{$label}</label>
-                                            <div class="input-group">
-                                                <span class="input-group-addon">{$smarty.const.THELIA_ROOT}</span>
-                                                <input class="form-control" id="review_local_path" type="text" name="{$name}" value="{$data}"/>
-                                            </div>
-                                        {/form_field}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <h2 class="title title-without-tabs">{intl l="Product reviews" d='netreviews.bo.default'}</h2>
                                 <div class="col-md-12 form-group">
                                     <div class="form-group">
@@ -133,6 +112,13 @@
                                     </div>
                                     <div id="product_iframe" class="product_review_mode_form {if $product_review_mode !== 'iframe'}hidden{/if}">
                                         <div class="form-group">
+                                            <p>{intl l="Configure Product reviews in netreviews backoffice with these parameters : " d='netreviews.bo.default'}</p>
+                                            <ul>
+                                                <li>{intl l="Form id = \"netreviews_form\"" d='netreviews.bo.default'}</li>
+                                                <li>{intl l="Field id = \"product_ref\"" d='netreviews.bo.default'}</li>
+                                                <li>{intl l="Container id = \"netreviews\"" d='netreviews.bo.default'}</li>
+                                            </ul>
+                                            <p>{intl l="Then paste the given javascript tag below" d='netreviews.bo.default'}</p>
                                             <label class="control-label" for="product_iframe_code">{intl l="Product iframe code :" d='netreviews.bo.default'}</label>
                                             {form_field field="product_iframe_code"}
                                                 <textarea id="product_iframe_code" name="{$name}" class="form-control" rows="5">{$value}</textarea>
@@ -140,11 +126,8 @@
                                         </div>
                                     </div>
                                     <div id="product_custom" class="product_review_mode_form {if $product_review_mode !== 'custom'}hidden{/if}">
-                                        <p>{intl l="1) Configure ftp export in netreviews backoffice"}</p>
-                                        <p>{intl l="2) Add a cron with this command : "}</p>
-                                        <p class="well well-sm">php Thelia module:NetReviews:GetProductReview</p>
                                         <div class="form-group">
-                                            <label for="display_product_review_exchanges">{intl l="Display product review exchanges" d='netreviews.bo.default'}</label>
+                                            <label for="display_product_review_exchanges">{intl l="Display product review exchanges with the customers" d='netreviews.bo.default'}</label>
                                             {form_field field="display_product_review_exchanges"}
                                             {$display_product_review_exchanges = $data}
                                                 <select id="display_product_review_exchanges" name="{$name}" class="form-control">
@@ -153,10 +136,55 @@
                                                 </select>
                                             {/form_field}
                                         </div>
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                <label for="product_review_mode">{intl l="Get review mode :" d='netreviews.bo.default'}</label>
+                                                {form_field field="get_review_mode"}
+                                                {$get_review_mode = $data}
+                                                    <select id="get_review_mode" name="{$name}" class="form-control">
+                                                        <option selected="true" disabled="true">{intl l="Please select how to get reviews" d='netreviews.bo.default'}</option>
+                                                        <option {if $get_review_mode == 'ftp'}selected{/if} value="ftp">{intl l="Download review throught ftp" d='netreviews.bo.default'}</option>
+                                                        <option {if $get_review_mode == 'local'}selected{/if} value="local">{intl l="Get file in this server" d='netreviews.bo.default'}</option>
+                                                    </select>
+                                                {/form_field}
+                                            </div>
+                                            <div id="review_ftp" class="get_review_mode_form {if $get_review_mode !== 'ftp'}hidden{/if}">
+                                                <div class="form-group">
+                                                    {$data = null}
+                                                    {render_form_field form=$form field="ftp_server" value={$data}}
+
+                                                    {$data = null}
+                                                    {render_form_field form=$form field="ftp_username" value={$data}}
+
+                                                    {form_field form=$form field='ftp_password'}
+                                                        <label class="control-label" for="ftp_password">{intl l="Ftp password :" d='netreviews.bo.default'}</label>
+                                                        <input class="form-control" id="ftp_password" type="password" name="{$name}" value="{$data}"/>
+                                                    {/form_field}
+
+                                                    {$data = null}
+                                                    {render_form_field form=$form field="ftp_port" value={$data}}
+
+                                                    {$data = null}
+                                                    {render_form_field form=$form field="ftp_directory" value={$data}}
+                                                </div>
+                                            </div>
+                                            <div id="review_local" class="get_review_mode_form {if $get_review_mode !== 'local'}hidden{/if}">
+                                                {form_field field="review_local_path"}
+                                                    <label class="control-label" for="review_local_path">{$label}</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">{$smarty.const.THELIA_ROOT}</span>
+                                                        <input class="form-control" id="review_local_path" type="text" name="{$name}" value="{$data}"/>
+                                                    </div>
+                                                {/form_field}
+                                            </div>
+                                        </div>
+                                        <p>{intl l="1) Configure ftp export in netreviews backoffice to put them in this same folder as defined above" d='netreviews.bo.default'}</p>
+                                        <p>{intl l="2) Add a cron with this command : " d='netreviews.bo.default'}</p>
+                                        <p class="well well-sm">php Thelia module:NetReviews:GetProductReview</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <h2 class="title title-without-tabs">{intl l="Site reviews" d='netreviews.bo.default'}</h2>
                                 <div class="col-md-12 form-group">
                                     <div class="form-group">

@@ -201,6 +201,18 @@ class ConfigurationForm extends BaseForm
                     ]
                 ]
             )
+            ->add(
+                "debug_mode",
+                'choice',
+                [
+                    "data" => NetReviews::getConfigValue("debug_mode", "false"),
+                    "required" => false,
+                    'choices'  => [
+                        'true' => 'true',
+                        'false' => 'false'
+                    ]
+                ]
+            )
         ;
     }
 

@@ -37,9 +37,9 @@ class OrderService
 
         $apiUrl = NetReviews::getConfigValue('api_url');
 
-        $debug = NetReviews::getConfigValue('debug_mode', 0);
+        $debug = NetReviews::getConfigValue('debug_mode', "false");
 
-        if (1 == $debug) {
+        if ("true" == $debug) {
             $apiUrl = self::DEBUG_API_URL;
         }
 
@@ -64,10 +64,10 @@ class OrderService
             'firstname' => $netreviewsOrder->getFirstname(),
             'lastname' => $netreviewsOrder->getLastname(),
             'delay' => $netreviewsOrder->getDelay(),
+            'PRODUCTS' => $products
         ];
 
         $message['sign'] = SHA1($message['query'].$message['order_ref'].$message['email'].$message['lastname'].$message['firstname'].$message['order_date'].$message['delay'].$secret);
-        $message['PRODUCTS'] = $products;
 
         $fields = http_build_query(
             [
@@ -114,14 +114,10 @@ class OrderService
                             LEFT JOIN `order` o ON (op.order_id = o.id)
                             LEFT JOIN `customer` cu ON (o.customer_id = cu.id)
                             LEFT JOIN `product` p ON (p.ref = op.product_ref)
-                            LEFT JOIN `rewriting_url` ru ON (p.id = ru.view_id)
-                            LEFT JOIN `product_image` pi ON (p.id = pi.product_id)
+                            LEFT JOIN `rewriting_url` ru ON (p.id = ru.view_id AND ru.view = 'product' AND ru.redirected IS NULL)
+                            LEFT JOIN `product_image` pi ON (p.id = pi.product_id AND pi.position = 1)
                             WHERE o.id = $orderId
-                            AND o.status_id IN ($statusToExport)
-                            AND ru.view = 'product'
-                            AND ru.redirected IS NULL
-                            AND pi.position = 1
-                            ";
+                            AND o.status_id IN ($statusToExport)";
 
         $stmt = $con->prepare($orderProductSql);
         $stmt->execute();
@@ -145,15 +141,20 @@ class OrderService
         $products = [];
 
         foreach ($results as $orderProduct) {
-            $imageEvent = $this->createProductImageEvent($orderProduct['file']);
-            $this->eventDispatcher->dispatch(TheliaEvents::IMAGE_PROCESS, $imageEvent);
-            $imagePath = $imageEvent->getFileUrl();
-
             $product = new NetReviewsProduct();
             $product->setId($orderProduct['product_ref'])
-                ->setName($orderProduct['title'])
-                ->setUrl($baseUrl."/".$orderProduct['url'])
-                ->setImageUrl($imagePath);
+                ->setName($orderProduct['title']);
+
+            if ($orderProduct['file'] !== null) {
+                $imageEvent = $this->createProductImageEvent($orderProduct['file']);
+                $this->eventDispatcher->dispatch(TheliaEvents::IMAGE_PROCESS, $imageEvent);
+                $imagePath = $imageEvent->getFileUrl();
+                $product->setImageUrl($imagePath);
+            }
+
+            if ($orderProduct['url'] !== null) {
+                $product->setUrl($baseUrl . "/" . $orderProduct['url']);
+            }
 
             $products[] = $product;
         }

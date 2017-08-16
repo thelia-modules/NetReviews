@@ -34,7 +34,6 @@ class ConfigurationController extends BaseAdminController
             $data = $this->validateForm($form)->getData();
 
             $excludeData = [
-                'secret_token',
                 'success_url',
                 'error_url',
                 'error_message',
