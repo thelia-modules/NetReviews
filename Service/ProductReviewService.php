@@ -103,7 +103,7 @@ class ProductReviewService
         $exchangeData->save();
     }
 
-    public function getProductReviews($productId, $withExchanges = true)
+    public function getProductReviews($productId, $withExchanges = true, $order = 'review_date')
     {
         /** @var SqlConnectionInterface $con */
         $con = Propel::getConnection();
@@ -112,7 +112,25 @@ class ProductReviewService
                 (SELECT AVG(nprr.rate) FROM netreviews_product_review nprr WHERE nprr.product_ref = npr.product_ref) AS product_rate
                 FROM netreviews_product_review npr 
                 LEFT JOIN netreviews_product_review_exchange npre ON (npr.product_review_id = npre.product_review_id)
-                WHERE npr.product_id = $productId";
+                WHERE npr.product_id = $productId ";
+
+        switch ($order) {
+            case 'review_date.asc':
+                $query .= " ORDER BY npr.review_date ASC";
+                break;
+            case 'review_date.desc':
+                $query .= " ORDER BY npr.review_date DESC";
+                break;
+            case 'rate.asc':
+                $query .= " ORDER BY npr.rate ASC";
+                break;
+            case 'rate.desc':
+                $query .= " ORDER BY npr.rate DESC";
+                break;
+            default:
+                $query .= " ORDER BY npr.review_date DESC";
+                break;
+        }
 
         $stmt = $con->prepare($query);
         $stmt->execute();

@@ -32,10 +32,11 @@ class ProductReviews extends AbstractSmartyPlugin
     {
         if (isset($params['product_id'])) {
             $productId = $params['product_id'];
+            $order = $params['order'];
 
             $getExchanges = NetReviews::getConfigValue('display_product_review_exchanges', 'true') === 'true'? true: false;;
 
-            $reviews = $this->productReviewService->getProductReviews($productId, $getExchanges);
+            $reviews = $this->productReviewService->getProductReviews($productId, $getExchanges, $order);
 
             $smarty->assign('product_reviews', $reviews);
         }
