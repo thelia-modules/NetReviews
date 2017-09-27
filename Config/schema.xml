@@ -15,7 +15,7 @@
         <column name="lastname" type="VARCHAR" size="255" />
         <column name="firstname" type="VARCHAR" size="255" />
         <column name="review_date" type="TIMESTAMP" />
-        <column name="message" type="VARCHAR" size="255" />
+        <column name="message" type="CLOB"/>
         <column name="rate" type="VARCHAR" size="255" />
         <column name="order_ref" type="VARCHAR" size="255"/>
         <column name="product_ref" type="VARCHAR" size="255"/>
@@ -30,7 +30,7 @@
         <column name="product_review_id" type="VARCHAR" size="55" required="true"/>
         <column name="date" type="TIMESTAMP" />
         <column name="who" type="VARCHAR" size="255" />
-        <column name="message" type="VARCHAR" size="255" />
+        <column name="message" type="CLOB"/>
 
         <foreign-key foreignTable="netreviews_product_review" name="fk_netreviews_product_review_exchange_product_review_id" onDelete="CASCADE" onUpdate="CASCADE">
             <reference foreign="product_review_id" local="product_review_id"/>

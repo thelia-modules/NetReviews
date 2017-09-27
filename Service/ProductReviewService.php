@@ -97,8 +97,9 @@ class ProductReviewService
             ->filterByProductReviewId($reviewId)
             ->filterByDate($exchange['date'])
             ->filterByWho($exchange['author'])
-            ->filterByMessage($exchange['comment'])
             ->findOneOrCreate();
+
+        $exchangeData->setMessage($exchange['comment']);
 
         $exchangeData->save();
     }

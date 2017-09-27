@@ -197,7 +197,7 @@ class NetreviewsProductReviewTableMap extends TableMap
         $this->addColumn('LASTNAME', 'Lastname', 'VARCHAR', false, 255, null);
         $this->addColumn('FIRSTNAME', 'Firstname', 'VARCHAR', false, 255, null);
         $this->addColumn('REVIEW_DATE', 'ReviewDate', 'TIMESTAMP', false, null, null);
-        $this->addColumn('MESSAGE', 'Message', 'VARCHAR', false, 255, null);
+        $this->addColumn('MESSAGE', 'Message', 'CLOB', false, null, null);
         $this->addColumn('RATE', 'Rate', 'VARCHAR', false, 255, null);
         $this->addColumn('ORDER_REF', 'OrderRef', 'VARCHAR', false, 255, null);
         $this->addColumn('PRODUCT_REF', 'ProductRef', 'VARCHAR', false, 255, null);

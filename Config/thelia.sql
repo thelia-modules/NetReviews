@@ -32,7 +32,7 @@ CREATE TABLE `netreviews_product_review`
     `lastname` VARCHAR(255),
     `firstname` VARCHAR(255),
     `review_date` DATETIME,
-    `message` VARCHAR(255),
+    `message` LONGTEXT,
     `rate` VARCHAR(255),
     `order_ref` VARCHAR(255),
     `product_ref` VARCHAR(255),
@@ -55,7 +55,7 @@ CREATE TABLE `netreviews_product_review_exchange`
     `product_review_id` VARCHAR(55) NOT NULL,
     `date` DATETIME,
     `who` VARCHAR(255),
-    `message` VARCHAR(255),
+    `message` LONGTEXT,
     PRIMARY KEY (`id`),
     INDEX `FI_netreviews_product_review_exchange_product_review_id` (`product_review_id`),
     CONSTRAINT `fk_netreviews_product_review_exchange_product_review_id`
