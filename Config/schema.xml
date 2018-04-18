@@ -37,5 +37,21 @@
         </foreign-key>
     </table>
 
+    <table name="netreviews_site_review">
+        <column autoIncrement="true" name="site_review_id" primaryKey="true" type="INTEGER" required="true" />
+        <column name="review_id" type="VARCHAR" size="255" required="true" />
+        <column name="lastname" type="VARCHAR" size="255" />
+        <column name="firstname" type="VARCHAR" size="255" />
+        <column name="review" type="CLOB"/>
+        <column name="review_date" type="TIMESTAMP"/>
+        <column name="rate" type="VARCHAR" size="255" />
+        <column name="order_ref" type="VARCHAR" size="255"/>
+        <column name="order_date" type="TIMESTAMP"/>
+
+        <unique name="review_id_unique">
+            <unique-column name="review_id"/>
+        </unique>
+    </table>
+
     <external-schema filename="local/config/schema.xml" referenceOnly="true" />
 </database>

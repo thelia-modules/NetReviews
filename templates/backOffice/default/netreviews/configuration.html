@@ -192,6 +192,16 @@
                                             <textarea id="site_widget_code" name="{$name}" class="form-control" rows="5">{$value}</textarea>
                                         {/form_field}
                                     </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="site_url_import">{intl l="Site url import :" d='netreviews.bo.default'}</label>
+
+                                        <p>{intl l="Add this cron to import site reviews and calculate average :" d='netreviews.bo.default'}</p>
+                                        <p class="well well-sm">php Thelia module:NetReviews:GetSiteReview</p>
+
+                                        {form_field field="site_url_import"}
+                                            <textarea id="site_url_import" name="{$name}" class="form-control" placeholder="cl.avis-verifies.com/fr/cache/a/7/5/[website_id]/AWS/WEBSITE_API/reviews." rows="1">{$value}</textarea>
+                                        {/form_field}
+                                    </div>
                                 </div>
                             </div>
                         </div>
