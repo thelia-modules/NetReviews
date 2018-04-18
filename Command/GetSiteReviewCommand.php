@@ -30,36 +30,36 @@ class GetSiteReviewCommand extends ContainerAwareCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $url_review = NetReviews::getConfigValue('site_url_import');
+        $urlReviews = NetReviews::getConfigValue('site_url_import');
 
-        if($url_review){
+        if ($urlReviews) {
             try {
-                $unparsed_json = file_get_contents($url_review);
+                $unparsedJson = file_get_contents($urlReviews);
 
-                $tabReviews = json_decode($unparsed_json);
+                $tabReviews = json_decode($unparsedJson);
 
                 $this->siteReviewService = $this->getContainer()->get('netreviews.site_review.service');
 
                 foreach ($tabReviews as $review) {
                     switch ($review->state) {
                         case '4':
-                            $this->siteReviewService->addRow($review);
+                            $this->siteReviewService->addNetreviewsSiteRow($review);
                             break;
-                        case 'UPDATE':
-                            $this->siteReviewService->updateRow($review);
+                        /*case 'UPDATE':
+                            $this->siteReviewService->updateNetreviewsSiteRow($review);
                             break;
                         case 'DELETE':
-                            $this->siteReviewService->delRow($review);
-                            break;
+                            $this->siteReviewService->deleteNetreviewsSiteRow($review);
+                            break;*/
                         default:
-                            NetReviews::log("Review action not recognized : " . $review->state);
+                            NetReviews::log("Site review action not recognized : " . $review->state);
                     }
                 }
 
                 $this->generateGlobalRateSite();
-            }
-            catch(\Exception $e) {
-                NetReviews::log("Site Rewiews error :".$e->getMessage());
+
+            } catch (\Exception $e) {
+                NetReviews::log("Site Rewiews ERROR :" . $e->getMessage());
                 $output->writeln($e->getMessage());
             }
 
@@ -73,9 +73,9 @@ class GetSiteReviewCommand extends ContainerAwareCommand
     {
         $fileRateJson = __DIR__ . "/rate.json";
 
-        if (($handle = fopen($fileRateJson, 'w+')) !== FALSE) {
+        if (($handle = fopen($fileRateJson, 'w+')) !== false) {
 
-            $average = $this->siteReviewService->calculSiteRate();
+            $average = $this->siteReviewService->calculateSiteRate();
 
             $tabAverage = array('rate_site' => $average);
 

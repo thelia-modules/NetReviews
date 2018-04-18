@@ -37,5 +37,5 @@ return array(
     'Then paste the given javascript tag below' => 'Puis coller le tag javascript obtenus',
     'Yes' => 'Oui',
     'Site url import' => 'URL de l\'import site',
-    'Add this cron to import site reviews and calculate average' => 'Ajouter ce cron pour importer les avis de site et calculer la moyenne'
+    'Add this cron to import site reviews and calculate our average' => 'Ajouter ce cron pour importer les avis de site et calculer leur moyenne'
 );

@@ -13,7 +13,7 @@ class SiteReviewService
      * @param $row
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function addRow($row)
+    public function addNetreviewsSiteRow($row)
     {
         $review = NetreviewsSiteReviewQuery::create()
             ->findOneByReviewId($row->id_review);
@@ -41,7 +41,7 @@ class SiteReviewService
         }
     }
 
-    public function delRow($row)
+    public function deleteNetreviewsSiteRow($row)
     {
         $review = NetreviewsSiteReviewQuery::create()
             ->findOneByReviewId($row->id_review);
@@ -51,7 +51,7 @@ class SiteReviewService
         }
     }
 
-    public function updateRow($row)
+    public function updateNetreviewsSiteRow($row)
     {
         $review = NetreviewsSiteReviewQuery::create()
             ->findOneByReviewId($row->id_review);
@@ -77,7 +77,7 @@ class SiteReviewService
         }
     }
 
-    public function calculSiteRate()
+    public function calculateSiteRate()
     {
         $reviewsRate = NetreviewsSiteReviewQuery::create()->find()->getData();
 
@@ -85,11 +85,11 @@ class SiteReviewService
         $countRate = count($reviewsRate);
 
         /** @var NetreviewsSiteReviewQuery $reviewRate */
-        foreach ($reviewsRate as $reviewRate){
+        foreach ($reviewsRate as $reviewRate) {
             $averageRate += $reviewRate->getRate();
         }
 
-        $averageRate = round($averageRate / $countRate,2);
+        $averageRate = round($averageRate / $countRate, 2);
 
         return round($averageRate = $averageRate * 2, 1);
     }
@@ -97,8 +97,8 @@ class SiteReviewService
     public function getRows($limit = null)
     {
         $reviews = NetreviewsSiteReviewQuery::create();
-        if($limit){
-           $reviews->setLimit($limit);
+        if ($limit) {
+            $reviews->setLimit($limit);
         }
         return $reviews->find();
     }

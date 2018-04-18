@@ -12,7 +12,7 @@ class SiteReviews extends AbstractSmartyPlugin
     /** @var SiteReviewService */
     private $siteReviewService;
 
-    public function __construct( SiteReviewService $siteReviewService)
+    public function __construct(SiteReviewService $siteReviewService)
     {
         $this->siteReviewService = $siteReviewService;
     }
@@ -46,7 +46,7 @@ class SiteReviews extends AbstractSmartyPlugin
 
     private function formatData($data)
     {
-        if($count = count($data)) {
+        if ($count = count($data)) {
             $tabRewiews = array();
             for ($i = 0; $i < $count; $i++) {
                 $tabRewiews[$i]['rate'] = $data[$i]->getRate();

@@ -181,7 +181,6 @@ class ConfigurationForm extends BaseForm
                     "label"=>Translator::getInstance()->trans("Site widget code", array(), NetReviews::DOMAIN_NAME)
                 ]
             )
-
             ->add(
                 "site_url_import",
                 "text",
@@ -190,7 +189,6 @@ class ConfigurationForm extends BaseForm
                     "label"=>Translator::getInstance()->trans("Site url import", array(), NetReviews::DOMAIN_NAME)
                 ]
             )
-
             ->add(
                 "product_iframe_code",
                 "text",
