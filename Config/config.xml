@@ -18,6 +18,7 @@
     <commands>
         <command class="NetReviews\Command\SendOrderCommand" />
         <command class="NetReviews\Command\GetProductReviewCommand" />
+        <command class="NetReviews\Command\GetSiteReviewCommand"/>
     </commands>
 
     <services>
@@ -30,9 +31,15 @@
         </service>
         <service id="netreviews.product_review.service" class="NetReviews\Service\ProductReviewService">
         </service>
+        <service id="netreviews.site_review.service" class="NetReviews\Service\SiteReviewService">
+        </service>
         <service id="netreviews.product_review.smarty.plugin" class="NetReviews\Smarty\ProductReviews">
             <tag name="thelia.parser.register_plugin"/>
             <argument type="service" id="netreviews.product_review.service"/>
+        </service>
+        <service id="netreviews.site_review.smarty.plugin" class="NetReviews\Smarty\SiteReviews">
+            <tag name="thelia.parser.register_plugin"/>
+            <argument type="service" id="netreviews.site_review.service"/>
         </service>
     </services>
 
