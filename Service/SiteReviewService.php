@@ -96,7 +96,7 @@ class SiteReviewService
 
     public function getRows($limit = null)
     {
-        $reviews = NetreviewsSiteReviewQuery::create();
+        $reviews = NetreviewsSiteReviewQuery::create()->orderByReviewDate('desc');
         if ($limit) {
             $reviews->setLimit($limit);
         }
