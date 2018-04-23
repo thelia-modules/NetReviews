@@ -50,10 +50,11 @@ class SiteReviews extends AbstractSmartyPlugin
             $tabRewiews = array();
             for ($i = 0; $i < $count; $i++) {
                 $tabRewiews[$i]['rate'] = $data[$i]->getRate();
-                $tabRewiews[$i]['review_date'] = $data[$i]->getReviewDate()->format('d/m/y');
+                $tabRewiews[$i]['review_date'] = $data[$i]->getReviewDate();
                 $tabRewiews[$i]['firstname'] = $data[$i]->getFirstname();
                 $tabRewiews[$i]['lastname'] = $data[$i]->getLastname();
-                $tabRewiews[$i]['order_date'] = $data[$i]->getOrderDate()->format('d/m/y');
+                $tabRewiews[$i]['order_date'] = $data[$i]->getOrderDate();
+                $tabRewiews[$i]['review'] = $data[$i]->getReview();
             }
 
             return $tabRewiews;
