@@ -5,6 +5,7 @@ namespace NetReviews\Service;
 use NetReviews\Model\Base\NetreviewsSiteReviewQuery;
 use NetReviews\Model\NetreviewsSiteReview;
 use NetReviews\NetReviews;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Exception\PropelException;
 
 class SiteReviewService
@@ -96,7 +97,7 @@ class SiteReviewService
 
     public function getRows($limit = null)
     {
-        $reviews = NetreviewsSiteReviewQuery::create()->orderByReviewDate('desc');
+        $reviews = NetreviewsSiteReviewQuery::create()->orderByReviewDate(Criteria::DESC);
         if ($limit) {
             $reviews->setLimit($limit);
         }
