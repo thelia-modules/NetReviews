@@ -103,14 +103,17 @@ class SiteReviewService
         }
         return $reviews->find();
     }
-
     public function readRate()
     {
         $fileRateJson = __DIR__ . "/../Command/rate.json";
 
-        if ($handle = file_get_contents($fileRateJson)) {
-            $jsonRate = json_decode($handle);
-            return $jsonRate->rate_site;
+        if(file_exists($fileRateJson)){
+            if ($handle = file_get_contents($fileRateJson)) {
+                $jsonRate = json_decode($handle);
+                return $jsonRate->rate_site;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
