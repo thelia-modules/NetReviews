@@ -2,6 +2,7 @@
 
 namespace NetReviews\Command;
 
+use NetReviews\Model\NetreviewsSiteReviewQuery;
 use NetReviews\NetReviews;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -31,6 +32,12 @@ class GetSiteReviewCommand extends ContainerAwareCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $urlReviews = NetReviews::getConfigValue('site_url_import');
+
+        $deleteOldEntries = NetreviewsSiteReviewQuery::create()
+            ->filterByReviewDate(array('max' => date("d-m-Y H:i:s", strtotime('-12 months'))))
+            ->orderByReviewDate()
+            ->find()
+            ->delete();
 
         if ($urlReviews) {
             try {
