@@ -35,8 +35,6 @@ class GetSiteReviewCommand extends ContainerAwareCommand
 
         $deleteOldEntries = NetreviewsSiteReviewQuery::create()
             ->filterByReviewDate(array('max' => date("d-m-Y H:i:s", strtotime('-12 months'))))
-            ->orderByReviewDate()
-            ->find()
             ->delete();
 
         if ($urlReviews) {
