@@ -15,9 +15,7 @@
 
 {if isset($product_reviews.reviews)}
     <h3>{intl l="Review average : %rate/5 based on %count review" rate=$product_reviews.rate count=$product_reviews.count d='netreviews.fo.default'}</h3>
-        {$i=0}
         {foreach from=$product_reviews.reviews item=review}
-            {$i = $i+1}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="text-primary">{$review.firstname} {$review.lastname|substr:0:1|strtoupper}. {reviews_stars value=$review.rate} {format_date date=$review.date}</h4>

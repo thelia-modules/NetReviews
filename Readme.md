@@ -15,7 +15,7 @@ The module send order to the platform and get reviews.
 Add it in your main thelia composer.json file
 
 ```
-composer require thelia/netreviews-module:~1.1.3
+composer require thelia/netreviews-module:~1.2.0
 ```
 
 ## Usage
@@ -46,6 +46,3 @@ But of you want change the place of the widget you can disable precedent hook an
 ```product.additional``` is used to display the product widget
 
 But of you want change the place of the widget you can disable precedent hook and add the ```netreviews.product.iframe``` where you want
-
-## To Do 
-Retrieve products reviews by xml files
