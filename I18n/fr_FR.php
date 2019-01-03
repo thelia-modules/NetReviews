@@ -1,6 +1,8 @@
 <?php
 
 return array(
+    'API url for all products average rate in json' => 'Url d\'API pour le fichier de note moyenne pour tous les produits ',
+    'API url for one product review list in json' => 'Url d\'API pour le fichier de  liste d\'avis par produit',
     'Error' => 'Erreur',
     'Footer link' => 'Lien du pied de page',
     'Footer link title' => 'Texte du lien dans le pied de page',
@@ -19,5 +21,6 @@ return array(
     'Review local path' => 'Chemin des avis en local',
     'Reviews email delay (in days):' => 'Délais d\'envois des emails (en jours) :',
     'Secret token' => 'Votre Clé Secrète',
+    'Site url import' => 'Site url import',
     'Site widget code' => 'Code du widget site',
 );

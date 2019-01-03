@@ -98,6 +98,7 @@ class ConfigurationForm extends BaseForm
                     "label"=>Translator::getInstance()->trans("Get review mode", array(), NetReviews::DOMAIN_NAME),
                     "required" => false,
                     'choices'  => [
+                        'api'=>'api',
                         'ftp'=>'ftp',
                         'local'=>'local'
                     ]
@@ -110,6 +111,26 @@ class ConfigurationForm extends BaseForm
                     "data" => NetReviews::getConfigValue("review_local_path"),
                     "label"=>Translator::getInstance()->trans("Review local path", array(), NetReviews::DOMAIN_NAME),
                     "label_attr" => ["for" => "review_local_path"],
+                    "required" => false
+                ]
+            )
+            ->add(
+                "api_all_products_url",
+                "text",
+                [
+                    "data" => NetReviews::getConfigValue("api_all_products_url"),
+                    "label"=>Translator::getInstance()->trans("API url for all products average rate in json", array(), NetReviews::DOMAIN_NAME),
+                    "label_attr" => ["for" => "ftp_server"],
+                    "required" => false
+                ]
+            )
+            ->add(
+                "api_one_product_url",
+                "text",
+                [
+                    "data" => NetReviews::getConfigValue("api_one_product_url"),
+                    "label"=>Translator::getInstance()->trans("API url for one product review list in json", array(), NetReviews::DOMAIN_NAME),
+                    "label_attr" => ["for" => "ftp_server"],
                     "required" => false
                 ]
             )

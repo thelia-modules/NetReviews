@@ -142,9 +142,24 @@
                                                 {$get_review_mode = $data}
                                                     <select id="get_review_mode" name="{$name}" class="form-control">
                                                         <option selected="true" disabled="true">{intl l="Please select how to get reviews" d='netreviews.bo.default'}</option>
+                                                        <option {if $get_review_mode == 'api'}selected{/if} value="api">{intl l="Get reviews by API" d='netreviews.bo.default'}</option>
                                                         <option {if $get_review_mode == 'ftp'}selected{/if} value="ftp">{intl l="Download review throught ftp" d='netreviews.bo.default'}</option>
                                                         <option {if $get_review_mode == 'local'}selected{/if} value="local">{intl l="Get file in this server" d='netreviews.bo.default'}</option>
                                                     </select>
+                                                {/form_field}
+                                            </div>
+                                            <div id="review_api" class="get_review_mode_form {if $get_review_mode !== 'api'}hidden{/if}">
+                                                <p>{intl l="1) Configure api export in netreviews backoffice at Product API tab, active all generation and set format to 'JSON'. <br/> Then fill below fields with given urls." d='netreviews.bo.default'}</p>
+
+                                                {form_field form=$form field='api_all_products_url'}
+                                                    <label class="control-label" for="{$name}">{$label}</label>
+                                                    <input class="form-control" id="{$name}" type="text" name="{$name}" value="{$data}" placeholder="https://cl.avis-verifies.com/fr/cache/1/5/b/[website_id]/AWS/PRODUCT_API/AVERAGE/all_products.json"/>
+                                                {/form_field}
+
+                                                {form_field form=$form field='api_one_product_url'}
+                                                    <label class="control-label" for="{$name}">{$label}</label>
+                                                    <span class="label-help-block">Leave [id_product] like this, he will be dynamically filled.</span>
+                                                    <input class="form-control" id="{$name}" type="text" name="{$name}" value="{$data}" placeholder="https//cl.avis-verifies.com/fr/cache/1/5/b/[website_id]/AWS/PRODUCT_API/REVIEWS/[id_product].json "/>
                                                 {/form_field}
                                             </div>
                                             <div id="review_ftp" class="get_review_mode_form {if $get_review_mode !== 'ftp'}hidden{/if}">
@@ -166,6 +181,7 @@
                                                     {$data = null}
                                                     {render_form_field form=$form field="ftp_directory" value={$data}}
                                                 </div>
+                                                <p>{intl l="1) Configure ftp export in netreviews backoffice to put them in this same folder as defined above" d='netreviews.bo.default'}</p>
                                             </div>
                                             <div id="review_local" class="get_review_mode_form {if $get_review_mode !== 'local'}hidden{/if}">
                                                 {form_field field="review_local_path"}
@@ -175,9 +191,9 @@
                                                         <input class="form-control" id="review_local_path" type="text" name="{$name}" value="{$data}"/>
                                                     </div>
                                                 {/form_field}
+                                                <p>{intl l="1) Configure ftp export in netreviews backoffice to put them in this same folder as defined above" d='netreviews.bo.default'}</p>
                                             </div>
                                         </div>
-                                        <p>{intl l="1) Configure ftp export in netreviews backoffice to put them in this same folder as defined above" d='netreviews.bo.default'}</p>
                                         <p>{intl l="2) Add a cron with this command : " d='netreviews.bo.default'}</p>
                                         <p class="well well-sm">php Thelia module:NetReviews:GetProductReview</p>
                                     </div>
