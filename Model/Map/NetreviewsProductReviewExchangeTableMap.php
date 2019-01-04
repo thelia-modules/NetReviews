@@ -150,7 +150,7 @@ class NetreviewsProductReviewExchangeTableMap extends TableMap
         $this->addForeignKey('PRODUCT_REVIEW_ID', 'ProductReviewId', 'VARCHAR', 'netreviews_product_review', 'PRODUCT_REVIEW_ID', true, 55, null);
         $this->addColumn('DATE', 'Date', 'TIMESTAMP', false, null, null);
         $this->addColumn('WHO', 'Who', 'VARCHAR', false, 255, null);
-        $this->addColumn('MESSAGE', 'Message', 'CLOB', false, null, null);
+        $this->addColumn('MESSAGE', 'Message', 'VARCHAR', false, 10000, null);
     } // initialize()
 
     /**

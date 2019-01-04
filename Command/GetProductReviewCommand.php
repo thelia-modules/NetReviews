@@ -3,13 +3,16 @@
 namespace NetReviews\Command;
 
 use NetReviews\Model\NetreviewsProductReview;
+use NetReviews\Model\NetreviewsProductReviewExchangeQuery;
 use NetReviews\Model\NetreviewsProductReviewQuery;
 use NetReviews\NetReviews;
 use NetReviews\Service\ProductReviewService;
+use Propel\Runtime\Propel;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Thelia\Command\ContainerAwareCommand;
+use Thelia\Log\Tlog;
 use Thelia\Model\ProductQuery;
 
 class GetProductReviewCommand extends ContainerAwareCommand
@@ -94,45 +97,64 @@ class GetProductReviewCommand extends ContainerAwareCommand
         $productReviewCounts = (array) json_decode(file_get_contents($productReviewCountUrl));
 
         foreach ($productReviewCounts as $productReviewCount) {
-            $netReviewsProductId = $productReviewCount->id_product;
-            $databaseReviewsCount = NetreviewsProductReviewQuery::create()
-                ->filterByProductRef($netReviewsProductId)->count();
+            try {
 
-            if ($databaseReviewsCount === (int) $productReviewCount->nb_reviews) {
-                continue;
-            }
+                $netReviewsProductId = $productReviewCount->id_product;
+                $databaseReviewsCount = NetreviewsProductReviewQuery::create()
+                    ->filterByProductRef($netReviewsProductId)->count();
 
-            $product = ProductQuery::create()->findOneByRef($netReviewsProductId);
-
-            if (null === $product) {
-                continue;
-            }
-
-            $productReviewsUrl = NetReviews::getConfigValue("api_one_product_url");
-            $productReviewsUrl = str_replace('[id_product]', $netReviewsProductId, $productReviewsUrl);
-            $productReviews = (array) json_decode(file_get_contents($productReviewsUrl));
-
-            foreach ($productReviews as $productReview) {
-                if (null !== NetreviewsProductReviewQuery::create()->filterByReviewId()->filterByProductReviewId($productReview->id_review)->findOne()) {
+                if ($databaseReviewsCount === (int) $productReviewCount->nb_reviews) {
                     continue;
                 }
 
-                $newReview = new NetreviewsProductReview();
-                $newReview
-                    ->setProductReviewId($productReview->id_review_product)
-                    ->setReviewId($productReview->id_review)
-                    ->setLastname($productReview->lastname)
-                    ->setFirstname($productReview->firstname)
-                    ->setReviewDate($productReview->review_date)
-                    ->setMessage($productReview->review)
-                    ->setRate($productReview->rate)
-                    ->setOrderRef($productReview->order_ref)
-                    ->setProductRef($productReview->id_product)
-                    ->setProductId($product->getId());
-                $newReview->save();
+                $product = ProductQuery::create()->findOneByRef($netReviewsProductId);
+
+                if (null === $product) {
+                    continue;
+                }
+
+                $productReviewsUrl = NetReviews::getConfigValue("api_one_product_url");
+                $productReviewsUrl = str_replace('[id_product]', $netReviewsProductId, $productReviewsUrl);
+                $productReviews = (array) json_decode(file_get_contents($productReviewsUrl));
+
+                foreach ($productReviews as $productReview) {
+                    if (null === $netReview = NetreviewsProductReviewQuery::create()->filterByReviewId($productReview->id_review)->filterByProductReviewId($productReview->id_review_product)->findOne()) {
+                        $netReview = new NetreviewsProductReview();
+                        $netReview
+                            ->setProductReviewId($productReview->id_review_product)
+                            ->setReviewId($productReview->id_review)
+                            ->setLastname($productReview->lastname)
+                            ->setFirstname($productReview->firstname)
+                            ->setReviewDate($productReview->review_date)
+                            ->setMessage($productReview->review)
+                            ->setRate($productReview->rate)
+                            ->setOrderRef($productReview->order_ref)
+                            ->setProductRef($productReview->id_product)
+                            ->setProductId($product->getId());
+                        $netReview->save();
+                    }
+
+                    if (property_exists($productReview, 'moderation')) {
+                        foreach ($productReview->moderation as $exchange) {
+                            $dateString = substr($exchange->comment_date, 0, strpos($exchange->comment_date, 'T'));
+
+                            $exchangeData = NetreviewsProductReviewExchangeQuery::create()
+                                ->filterByProductReviewId($productReview->id_review_product)
+                                ->filterByDate($dateString)
+                                ->filterByWho($exchange->comment_origin)
+                                ->findOneOrCreate();
+
+                            $exchangeData->setMessage($exchange->comment);
+
+                            $exchangeData->save();
+                        }
+                        $netReview->setExchange(1)->save();
+                    }
+                }
+            } catch (\Exception $e) {
+                NetReviews::log("One review was not imported with api product ref ".$productReviewCount->id_product." error : ".$e->getMessage());
             }
         }
-
     }
 
     protected function importReview($review)

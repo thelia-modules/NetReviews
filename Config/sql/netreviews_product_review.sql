@@ -6,7 +6,6 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ---------------------------------------------------------------------
 -- netreviews_product_review
 -- ---------------------------------------------------------------------
-
 DROP TABLE IF EXISTS `netreviews_product_review`;
 
 CREATE TABLE `netreviews_product_review`
@@ -17,7 +16,7 @@ CREATE TABLE `netreviews_product_review`
     `lastname` VARCHAR(255),
     `firstname` VARCHAR(255),
     `review_date` DATETIME,
-    `message` LONGTEXT,
+    `message` VARBINARY(10000),
     `rate` VARCHAR(255),
     `order_ref` VARCHAR(255),
     `product_ref` VARCHAR(255),
@@ -40,15 +39,16 @@ CREATE TABLE `netreviews_product_review_exchange`
     `product_review_id` VARCHAR(55) NOT NULL,
     `date` DATETIME,
     `who` VARCHAR(255),
-    `message` LONGTEXT,
+    `message` VARBINARY(10000),
     PRIMARY KEY (`id`),
     INDEX `FI_netreviews_product_review_exchange_product_review_id` (`product_review_id`),
     CONSTRAINT `fk_netreviews_product_review_exchange_product_review_id`
-    FOREIGN KEY (`product_review_id`)
-    REFERENCES `netreviews_product_review` (`product_review_id`)
+        FOREIGN KEY (`product_review_id`)
+        REFERENCES `netreviews_product_review` (`product_review_id`)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
 
 # This restores the fkey checks, after having unset them earlier
 SET FOREIGN_KEY_CHECKS = 1;
