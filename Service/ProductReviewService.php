@@ -128,6 +128,7 @@ class ProductReviewService
             case 'rate.desc':
                 $query .= " ORDER BY npr.rate DESC";
                 break;
+            case 'review_date.desc':
             default:
                 $query .= " ORDER BY npr.review_date DESC";
                 break;
@@ -136,7 +137,7 @@ class ProductReviewService
         $stmt = $con->prepare($query);
         $stmt->execute();
 
-        $productReviews = [];
+        $productReviews = ['reviews' => []];
         $exchanges = [];
 
         while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
