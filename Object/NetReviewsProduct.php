@@ -16,6 +16,9 @@ class NetReviewsProduct
     /** @var  string */
     protected $imageUrl;
 
+    /** @var  string */
+    protected $gtinEan;
+
     /**
      * @return int
      */
@@ -88,5 +91,21 @@ class NetReviewsProduct
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getGtinEan()
+    {
+        return $this->gtinEan;
+    }
 
+    /**
+     * @param string $gtinEan
+     * @return NetReviewsProduct
+     */
+    public function setGtinEan(string $gtinEan)
+    {
+        $this->gtinEan = $gtinEan;
+        return $this;
+    }
 }
