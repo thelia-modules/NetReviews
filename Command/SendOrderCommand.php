@@ -8,6 +8,7 @@ use NetReviews\Model\NetreviewsOrderQueue;
 use NetReviews\Model\NetreviewsOrderQueueQuery;
 use NetReviews\Service\OrderService;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\Propel;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Thelia\Command\ContainerAwareCommand;
@@ -31,17 +32,24 @@ class SendOrderCommand extends ContainerAwareCommand
             /** @var OrderService $netreviewsOrderService */
             $netreviewsOrderService = $this->getContainer()->get('netreviews.order.service');
 
-            $ordersInQueue = NetreviewsOrderQueueQuery::create()
-                ->filterByTreatedAt(null, Criteria::ISNULL)
-                ->find();
+            $con = Propel::getConnection();
 
-            $orderCount = $ordersInQueue->count();
+            $ordersInQueue = "
+                                SELECT n.order_id 'order_id' 
+                                FROM netreviews_order_queue n 
+                                JOIN `order` o on n.order_id = o.id 
+                                WHERE o.status_id =4 AND n.treated_at IS NULL";
+
+            $stmt = $con->prepare($ordersInQueue);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $orderCount = count($results);
             $output->writeln(sprintf("<info>$orderCount orders found</info>"));
 
-            /** @var NetreviewsOrderQueue $order */
-            foreach ($ordersInQueue as $order) {
+            foreach ($results as $order) {
                 try {
-                    $orderId = $order->getOrderId();
+                    $orderId = $order['order_id'];
                     $response = $netreviewsOrderService->sendOrderToNetReviews($orderId);
                     $return = $response->return;
 
@@ -50,7 +58,7 @@ class SendOrderCommand extends ContainerAwareCommand
                         throw new \Exception($debug);
                     }
                 } catch (\Exception $e) {
-                    $output->writeln(sprintf("<error>Error on order id ".$order->getOrderId().":".$e->getMessage()."</error>"));
+                    $output->writeln(sprintf("<error>Error on order id ".$order['order_id'].":".$e->getMessage()."</error>"));
                 }
             }
         } catch (\Exception $e) {
