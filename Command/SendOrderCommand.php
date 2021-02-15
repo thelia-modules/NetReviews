@@ -6,6 +6,7 @@ namespace NetReviews\Command;
 
 use NetReviews\Model\NetreviewsOrderQueue;
 use NetReviews\Model\NetreviewsOrderQueueQuery;
+use NetReviews\NetReviews;
 use NetReviews\Service\OrderService;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Propel;
@@ -34,11 +35,13 @@ class SendOrderCommand extends ContainerAwareCommand
 
             $con = Propel::getConnection();
 
+            $status = NetReviews::getConfigValue('status_to_export', '4');
+
             $ordersInQueue = "
                                 SELECT n.order_id 'order_id' 
                                 FROM netreviews_order_queue n 
                                 JOIN `order` o on n.order_id = o.id 
-                                WHERE o.status_id =4 AND n.treated_at IS NULL";
+                                WHERE o.status_id IN ($status) AND n.treated_at IS NULL";
 
             $stmt = $con->prepare($ordersInQueue);
             $stmt->execute();
