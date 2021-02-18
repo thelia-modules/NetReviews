@@ -52,16 +52,14 @@ class OrderListener implements EventSubscriberInterface
             ->findOne();
 
         if (null !== $netReviewsOrderQueue){
-            if (!in_array($newStatus, $statusToExport, false)){
+            if (!in_array($newStatus, $statusToExport, false) && (int)$netReviewsOrderQueue->getStatus() === 0){
                 $netReviewsOrderQueue->delete();
             }
-        } else {
-            if (in_array($newStatus, $statusToExport, false)){
-                $netReviewsOrderQueue = new NetreviewsOrderQueue();
-                $netReviewsOrderQueue->setOrderId($orderId)
-                    ->setStatus(0)
-                    ->save();
-            }
+        } else if (in_array($newStatus, $statusToExport, false)){
+            $netReviewsOrderQueue = new NetreviewsOrderQueue();
+            $netReviewsOrderQueue->setOrderId($orderId)
+                ->setStatus(0)
+                ->save();
         }
     }
 }
