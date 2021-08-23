@@ -9,6 +9,7 @@ use NetReviews\Object\NetReviewsProduct;
 use Propel\Runtime\Connection\ConnectionWrapper;
 use Propel\Runtime\Propel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Thelia\Core\Event\Image\ImageEvent;
 use Thelia\Core\Event\TheliaEvents;
 use Thelia\Core\HttpFoundation\Request;
@@ -24,10 +25,10 @@ class OrderService
     /** @var  Request */
     protected $request;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher, Request $request)
+    public function __construct(EventDispatcherInterface $eventDispatcher, RequestStack $requestStack)
     {
         $this->eventDispatcher = $eventDispatcher;
-        $this->request = $request;
+        $this->request = $requestStack->getCurrentRequest();
     }
 
     public function sendOrderToNetReviews($orderId)
@@ -82,7 +83,7 @@ class OrderService
         curl_setopt($ch, CURLOPT_URL, "http://$apiUrl/index.php?action=act_api_notification_sha1");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
-        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POST, array($fields));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-type: application/x-www-form-urlencoded']);
         $response = curl_exec($ch);
@@ -149,7 +150,7 @@ class OrderService
 
             if ($orderProduct['file'] !== null) {
                 $imageEvent = $this->createProductImageEvent($orderProduct['file']);
-                $this->eventDispatcher->dispatch(TheliaEvents::IMAGE_PROCESS, $imageEvent);
+                $this->eventDispatcher->dispatch($imageEvent, TheliaEvents::IMAGE_PROCESS);
                 $imagePath = $imageEvent->getFileUrl();
                 $product->setImageUrl($imagePath);
             }
@@ -176,7 +177,7 @@ class OrderService
      */
     protected function createProductImageEvent($imageFile)
     {
-        $imageEvent = new ImageEvent($this->request);
+        $imageEvent = new ImageEvent();
         $baseSourceFilePath = ConfigQuery::read('images_library_path');
         if ($baseSourceFilePath === null) {
             $baseSourceFilePath = THELIA_LOCAL_DIR . 'media' . DS . 'images';

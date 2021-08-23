@@ -11,7 +11,7 @@ class SendOrderForm extends BaseForm
 
     }
 
-    public function getName()
+    public static function getName()
     {
         return "netreviews_send_order_form";
     }

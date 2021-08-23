@@ -15,7 +15,7 @@
                     {form_field form=$form field='success_url'}
                         <input type="hidden" name="{$name}" value="{url path={navigate to="current"}}"/>
                     {/form_field}
-                    {if null !== $treated_at}
+                    {if null !== $treated_at|default:null}
                         <input type="submit" class="btn btn-default form-control" value="{intl l="Order sent on %date at %time click here to send again" date={format_date date=$treated_at output="date"} time={format_date date=$treated_at output="time"} d='netreviews.bo.default'}">
                     {else}
                         <input type="submit" class="btn btn-success form-control" value="{intl l='Send'}">
