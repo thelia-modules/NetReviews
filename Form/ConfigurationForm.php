@@ -3,6 +3,8 @@
 namespace NetReviews\Form;
 
 use NetReviews\NetReviews;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Thelia\Core\Translation\Translator;
 use Thelia\Form\BaseForm;
 use Thelia\Model\OrderStatusQuery;
@@ -19,13 +21,13 @@ class ConfigurationForm extends BaseForm
         /** @var \Thelia\Model\OrderStatus $item */
         foreach ($list as $item) {
             $item->setLocale($this->getRequest()->getSession()->getLang()->getLocale());
-            $orderStatus[$item->getId()] = $item->getTitle();
+            $orderStatus[$item->getTitle()] = $item->getId();
         }
 
         $this->formBuilder
             ->add(
                 "id_website",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("id_website"),
                     "label"=>Translator::getInstance()->trans("Id website", array(), NetReviews::DOMAIN_NAME),
@@ -35,7 +37,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "secret_token",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("secret_token"),
                     "label"=>Translator::getInstance()->trans("Secret token", array(), NetReviews::DOMAIN_NAME),
@@ -45,7 +47,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 'api_url',
-                'text',
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("api_url"),
                     "label"=>Translator::getInstance()->trans("Platform language", array(), NetReviews::DOMAIN_NAME),
@@ -54,7 +56,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 'email_delay',
-                'text',
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("email_delay", 3),
                     "label"=>Translator::getInstance()->trans("Reviews email delay (in days):", array(), NetReviews::DOMAIN_NAME),
@@ -63,7 +65,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 'status_to_export',
-                'choice',
+                ChoiceType::class,
                 [
                     "data" => explode(',', NetReviews::getConfigValue("status_to_export")),
                     "label"=>Translator::getInstance()->trans("Order status to export", array(), NetReviews::DOMAIN_NAME),
@@ -74,7 +76,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "footer_link_title",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("footer_link_title"),
                     "label"=>Translator::getInstance()->trans("Footer link title", array(), NetReviews::DOMAIN_NAME),
@@ -83,7 +85,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "footer_link",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("footer_link"),
                     "label"=>Translator::getInstance()->trans("Footer link", array(), NetReviews::DOMAIN_NAME),
@@ -92,7 +94,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "get_review_mode",
-                'choice',
+                ChoiceType::class,
                 [
                     "data" => NetReviews::getConfigValue("get_review_mode"),
                     "label"=>Translator::getInstance()->trans("Get review mode", array(), NetReviews::DOMAIN_NAME),
@@ -106,7 +108,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "review_local_path",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("review_local_path"),
                     "label"=>Translator::getInstance()->trans("Review local path", array(), NetReviews::DOMAIN_NAME),
@@ -116,7 +118,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "api_all_products_url",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("api_all_products_url"),
                     "label"=>Translator::getInstance()->trans("API url for all products average rate in json", array(), NetReviews::DOMAIN_NAME),
@@ -126,7 +128,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "api_one_product_url",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("api_one_product_url"),
                     "label"=>Translator::getInstance()->trans("API url for one product review list in json", array(), NetReviews::DOMAIN_NAME),
@@ -136,7 +138,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "ftp_server",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("ftp_server"),
                     "label"=>Translator::getInstance()->trans("Ftp server", array(), NetReviews::DOMAIN_NAME),
@@ -146,7 +148,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "ftp_username",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("ftp_username"),
                     "label"=>Translator::getInstance()->trans("Ftp username", array(), NetReviews::DOMAIN_NAME),
@@ -156,7 +158,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "ftp_password",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("ftp_password"),
                     "label"=>Translator::getInstance()->trans("Ftp password", array(), NetReviews::DOMAIN_NAME),
@@ -165,7 +167,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "ftp_port",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("ftp_port"),
                     "label"=>Translator::getInstance()->trans("Ftp port", array(), NetReviews::DOMAIN_NAME),
@@ -174,7 +176,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "ftp_directory",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("ftp_directory"),
                     "label"=>Translator::getInstance()->trans("Ftp directory", array(), NetReviews::DOMAIN_NAME),
@@ -183,7 +185,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 'product_review_mode',
-                'choice',
+                ChoiceType::class,
                 [
                     "data" => NetReviews::getConfigValue("product_review_mode"),
                     "label"=>Translator::getInstance()->trans("Product review mode", array(), NetReviews::DOMAIN_NAME),
@@ -196,7 +198,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "site_widget_code",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("site_widget_code"),
                     "label"=>Translator::getInstance()->trans("Site widget code", array(), NetReviews::DOMAIN_NAME)
@@ -204,7 +206,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "site_url_import",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("site_url_import"),
                     "label"=>Translator::getInstance()->trans("Site url import", array(), NetReviews::DOMAIN_NAME)
@@ -212,7 +214,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "product_iframe_code",
-                "text",
+                TextType::class,
                 [
                     "data" => NetReviews::getConfigValue("product_iframe_code"),
                     "label"=>Translator::getInstance()->trans("Product iframe code", array(), NetReviews::DOMAIN_NAME)
@@ -220,7 +222,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "display_product_review_exchanges",
-                'choice',
+                ChoiceType::class,
                 [
                     "data" => NetReviews::getConfigValue("display_product_review_exchanges"),
                     "required" => false,
@@ -232,7 +234,7 @@ class ConfigurationForm extends BaseForm
             )
             ->add(
                 "debug_mode",
-                'choice',
+                ChoiceType::class,
                 [
                     "data" => NetReviews::getConfigValue("debug_mode", "false"),
                     "required" => false,
@@ -245,7 +247,7 @@ class ConfigurationForm extends BaseForm
         ;
     }
 
-    public function getName()
+    public static function getName()
     {
         return "netreviews_configuration_form";
     }

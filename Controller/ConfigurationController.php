@@ -3,32 +3,30 @@
 
 namespace NetReviews\Controller;
 
+use NetReviews\Form\ConfigurationForm;
 use NetReviews\NetReviews;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Core\Translation\Translator;
+use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/admin/module/netreviews", name="admin_netreviews_config")
+ */
 class ConfigurationController extends BaseAdminController
 {
-    public function viewAction()
-    {
-        return $this->render(
-            "netreviews/configuration",
-            [
-                "id_web_site" => NetReviews::getConfigValue('id_web_site'),
-                "token" => NetReviews::getConfigValue('token')
-            ]
-        );
-    }
 
+    /**
+     * @Route("/configuration", name="_save", methods="POST")
+     */
     public function saveAction()
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'NetReviews', AccessManager::VIEW)) {
             return $response;
         }
 
-        $form = $this->createForm("netreviews_configuration.form");
+        $form = $this->createForm(ConfigurationForm::getName());
 
         try {
             $data = $this->validateForm($form)->getData();

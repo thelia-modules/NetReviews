@@ -1,0 +1,17 @@
+{block name="javascript-initialization"}
+    <script>
+        $(function () {
+            $("#product_review_mode").change(function () {
+                var mode = $(this).val();
+                $(".product_review_mode_form").addClass('hidden');
+                $("#product_"+mode).removeClass('hidden');
+            });
+
+            $("#get_review_mode").change(function () {
+                var mode = $(this).val();
+                $(".get_review_mode_form").addClass('hidden');
+                $("#review_"+mode).removeClass('hidden');
+            });
+        });
+    </script>
+{/block}

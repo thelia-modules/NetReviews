@@ -15,6 +15,7 @@ namespace NetReviews;
 use NetReviews\Model\NetreviewsOrderQueueQuery;
 use NetReviews\Model\NetreviewsProductReviewQuery;
 use Propel\Runtime\Connection\ConnectionInterface;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Symfony\Component\Finder\Finder;
 use Thelia\Core\Template\TemplateDefinition;
 use Thelia\Install\Database;
@@ -31,7 +32,7 @@ class NetReviews extends BaseModule
     /** @var string */
     const UPDATE_PATH = __DIR__ . DS . 'Config' . DS . 'sql' . DS . 'update';
 
-    public function postActivation(ConnectionInterface $con = null)
+    public function postActivation(ConnectionInterface $con = null): void
     {
         try {
             NetreviewsOrderQueueQuery::create()
@@ -50,7 +51,7 @@ class NetReviews extends BaseModule
         }
     }
 
-    public function update($currentVersion, $newVersion, ConnectionInterface $con = null)
+    public function update($currentVersion, $newVersion, ConnectionInterface $con = null): void
     {
         $finder = (new Finder())->files()->name('#.*?\.sql#')->sortByName()->in(self::UPDATE_PATH);
 
@@ -126,5 +127,13 @@ class NetReviews extends BaseModule
             THELIA_ROOT . "log" . DS . "netreviews" . DS . $year.$month.".txt"
         );
         $logger->addAlert("MESSAGE => " . print_r($msg, true));
+    }
+
+    public static function configureServices(ServicesConfigurator $servicesConfigurator): void
+    {
+        $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
+            ->exclude([THELIA_MODULE_DIR . ucfirst(self::getModuleCode()). "/I18n/*"])
+            ->autowire(true)
+            ->autoconfigure(true);
     }
 }

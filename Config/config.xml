@@ -11,7 +11,7 @@
     </loops>
 
     <forms>
-        <form name="netreviews_configuration.form" class="NetReviews\Form\ConfigurationForm" />
+        <form name="netreviews_configuration_form" class="NetReviews\Form\ConfigurationForm" />
         <form name="netreviews_send_order_form" class="NetReviews\Form\SendOrderForm" />
     </forms>
 
@@ -22,25 +22,9 @@
     </commands>
 
     <services>
-        <service id="netreviews.order.listener" class="NetReviews\EventListeners\OrderListener">
-            <tag name="kernel.event_subscriber" />
-        </service>
-        <service id="netreviews.order.service" class="NetReviews\Service\OrderService" scope="request">
-            <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="request"/>
-        </service>
-        <service id="netreviews.product_review.service" class="NetReviews\Service\ProductReviewService">
-        </service>
-        <service id="netreviews.site_review.service" class="NetReviews\Service\SiteReviewService">
-        </service>
-        <service id="netreviews.product_review.smarty.plugin" class="NetReviews\Smarty\ProductReviews">
-            <tag name="thelia.parser.register_plugin"/>
-            <argument type="service" id="netreviews.product_review.service"/>
-        </service>
-        <service id="netreviews.site_review.smarty.plugin" class="NetReviews\Smarty\SiteReviews">
-            <tag name="thelia.parser.register_plugin"/>
-            <argument type="service" id="netreviews.site_review.service"/>
-        </service>
+        <service id="netreviews.product_review.service" alias="NetReviews\Service\ProductReviewService" public="true"/>
+        <service id="netreviews.site_review.service" alias="NetReviews\Service\SiteReviewService" public="true"/>
+        <service id="netreviews.order.service" alias="NetReviews\Service\OrderService" public="true"/>
     </services>
 
     <hooks>
@@ -58,6 +42,8 @@
         </hook>
 
         <hook id="netreviews.hook.back" class="NetReviews\Hook\BackHook">
+            <tag name="hook.event_listener" event="module.configuration" type="back" method="onModuleConfigure" />
+            <tag name="hook.event_listener" event="module.config-js" type="back" method="onModuleConfigureJs" />
             <tag name="hook.event_listener" event="order-edit.bottom" type="back" method="onOrderEditBottom" />
         </hook>
     </hooks>

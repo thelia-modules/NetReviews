@@ -7,6 +7,7 @@ use NetReviews\Object\NetReviewsProduct;
 use NetReviews\Service\OrderService;
 use Propel\Runtime\Connection\ConnectionWrapper;
 use Propel\Runtime\Propel;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Thelia\Core\Event\Hook\HookRenderBlockEvent;
 use Thelia\Core\Event\Hook\HookRenderEvent;
 use Thelia\Core\Event\Image\ImageEvent;
@@ -160,7 +161,7 @@ class FrontHook extends BaseHook
      */
     protected function createProductImageEvent($imageFile)
     {
-        $imageEvent = new ImageEvent($this->request);
+        $imageEvent = new ImageEvent();
         $baseSourceFilePath = ConfigQuery::read('images_library_path');
         if ($baseSourceFilePath === null) {
             $baseSourceFilePath = THELIA_LOCAL_DIR . 'media' . DS . 'images';
