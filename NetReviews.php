@@ -34,20 +34,11 @@ class NetReviews extends BaseModule
 
     public function postActivation(ConnectionInterface $con = null): void
     {
-        try {
-            NetreviewsOrderQueueQuery::create()
-                ->find();
-        } catch (\Exception $exception) {
+        if (!self::getConfigValue('is_initialized', false)){
             $database = new Database($con);
             $database->insertSql(null, [__DIR__ . "/Config/sql/netreviews_order_queue.sql"]);
-        }
-
-        try {
-            NetreviewsProductReviewQuery::create()
-                ->find();
-        } catch (\Exception $exception) {
-            $database = new Database($con);
             $database->insertSql(null, [__DIR__ . "/Config/sql/netreviews_product_review.sql"]);
+            self::setConfigValue('is_initialized', true);
         }
     }
 
