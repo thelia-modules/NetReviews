@@ -147,16 +147,16 @@ class ProductReviewService
                 'lastname' => $result['lastname'],
                 'firstname' => $result['firstname'],
                 'date' => $result['review_date'],
-                'message' => $result['message'],
-                'rate' => $result['rate'],
-                'exchange' => $result['exchange'],
+                'message' => $result['message']?:null,
+                'rate' => $result['rate']?:null,
+                'exchange' => $result['exchange']?:null,
             ];
 
             if (true == $withExchanges) {
                 $exchanges[$result['product_review_id']][] = [
-                    'date' => $result['exchange_date'],
-                    'who' => $result['exchange_who'],
-                    'message' => $result['exchange_message']
+                    'date' => $result['exchange_date']?:null,
+                    'who' => $result['exchange_who']?:null,
+                    'message' => $result['exchange_message']?:null
                 ];
 
                 $productReviews['reviews'][$result['product_review_id']]['exchanges'] = $exchanges[$result['product_review_id']];
