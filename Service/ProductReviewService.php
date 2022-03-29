@@ -137,7 +137,10 @@ class ProductReviewService
         $stmt = $con->prepare($query);
         $stmt->execute();
 
-        $productReviews = ['reviews' => []];
+        $productReviews = [
+            'reviews' => [],
+            'rate' => null
+        ];
         $exchanges = [];
 
         while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
