@@ -47,7 +47,7 @@ class GetSiteReviewCommand extends ContainerAwareCommand
 
                 foreach ($tabReviews as $review) {
                     switch ($review->state) {
-                        case '4':
+                        case '6':
                             $this->siteReviewService->addNetreviewsSiteRow($review);
                             break;
                         /*case 'UPDATE':
