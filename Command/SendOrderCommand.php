@@ -67,5 +67,7 @@ class SendOrderCommand extends ContainerAwareCommand
         }
 
         $output->writeln(sprintf("<info>End</info>"));
+
+        return 1;
     }
 }

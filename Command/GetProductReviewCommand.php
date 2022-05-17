@@ -43,6 +43,8 @@ class GetProductReviewCommand extends ContainerAwareCommand
                 $this->executeFileTransferImport($input, $output);
                 break;
         }
+
+        return 1;
     }
 
     protected function executeFileTransferImport(InputInterface $input, OutputInterface $output)
