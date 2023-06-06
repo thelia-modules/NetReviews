@@ -63,6 +63,8 @@ class GetSiteReviewCommand extends ContainerAwareCommand
 
                 $this->generateGlobalRateSite();
 
+                return 1;
+
             } catch (\Exception $e) {
                 NetReviews::log("Site Rewiews ERROR :" . $e->getMessage());
                 $output->writeln($e->getMessage());
