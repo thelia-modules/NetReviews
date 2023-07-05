@@ -57,7 +57,7 @@ CREATE TABLE `netreviews_product_review_exchange`
     `who` VARCHAR(255),
     `message` VARBINARY(10000),
     PRIMARY KEY (`id`),
-    INDEX `FI_netreviews_product_review_exchange_product_review_id` (`product_review_id`),
+    INDEX `fi_netreviews_product_review_exchange_product_review_id` (`product_review_id`),
     CONSTRAINT `fk_netreviews_product_review_exchange_product_review_id`
         FOREIGN KEY (`product_review_id`)
         REFERENCES `netreviews_product_review` (`product_review_id`)
@@ -77,7 +77,7 @@ CREATE TABLE `netreviews_site_review`
     `review_id` VARCHAR(255) NOT NULL,
     `lastname` VARCHAR(255),
     `firstname` VARCHAR(255),
-    `review` LONGTEXT,
+    `review` VARBINARY(10000),
     `review_date` DATETIME,
     `rate` VARCHAR(255),
     `order_ref` VARCHAR(255),

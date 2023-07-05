@@ -42,7 +42,7 @@
         <column name="review_id" type="VARCHAR" size="255" required="true" />
         <column name="lastname" type="VARCHAR" size="255" />
         <column name="firstname" type="VARCHAR" size="255" />
-        <column name="review" type="CLOB"/>
+        <column name="review" size="10000" sqlType="VARBINARY(10000)" type="VARCHAR"/>
         <column name="review_date" type="TIMESTAMP"/>
         <column name="rate" type="VARCHAR" size="255" />
         <column name="order_ref" type="VARCHAR" size="255"/>
