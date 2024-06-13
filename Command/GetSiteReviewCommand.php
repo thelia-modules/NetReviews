@@ -74,6 +74,8 @@ class GetSiteReviewCommand extends ContainerAwareCommand
             NetReviews::log('Url import site reviews empty');
             $output->writeln(print_r('ERROR --> Url import site reviews empty'));
         }
+
+        return 1;
     }
 
     private function generateGlobalRateSite()
