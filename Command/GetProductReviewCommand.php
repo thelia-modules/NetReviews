@@ -8,6 +8,7 @@ use NetReviews\Model\NetreviewsProductReviewQuery;
 use NetReviews\NetReviews;
 use NetReviews\Service\ProductReviewService;
 use Propel\Runtime\Propel;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,18 +32,23 @@ class GetProductReviewCommand extends ContainerAwareCommand
             );
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $getReviewMode = NetReviews::getConfigValue('get_review_mode');
+        $reviewMode = NetReviews::getConfigValue('get_review_mode');
 
-        switch ($getReviewMode) {
-            case 'api' :
-                $this->executeApiImport($input, $output);
-                break;
-            default:
-                $this->executeFileTransferImport($input, $output);
-                break;
+        try {
+            match ($reviewMode) {
+                'api' => $this->executeApiImport($input, $output),
+                default => $this->executeFileTransferImport($input, $output),
+            };
+        } catch (\Throwable $e) {
+            $output->writeln("<error>{$e->getMessage()}</error>");
+            $output->writeln("<error>{$e->getTraceAsString()}</error>");
+
+            return Command::FAILURE;
         }
+
+        return Command::SUCCESS;
     }
 
     protected function executeFileTransferImport(InputInterface $input, OutputInterface $output)
