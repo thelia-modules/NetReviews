@@ -28,7 +28,7 @@ class SiteReviews extends AbstractSmartyPlugin
      * @param array $params
      * @param \Smarty_Internal_Template $smarty
      */
-    public function getSiteReviews($nbreReview = null, $smarty)
+    public function getSiteReviews($smarty, $nbreReview = null)
     {
         /** @var SiteReviewService $siteReviewService */
         $reviews = $this->siteReviewService->getRows($nbreReview['limit']);
