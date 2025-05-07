@@ -9,6 +9,7 @@ use NetReviews\Model\NetreviewsOrderQueueQuery;
 use NetReviews\Service\OrderService;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Propel;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Thelia\Command\ContainerAwareCommand;
@@ -64,8 +65,11 @@ class SendOrderCommand extends ContainerAwareCommand
         } catch (\Exception $e) {
             $output->writeln('');
             $output->writeln('<error>'.$e->getMessage().'</error>');
+            return Command::FAILURE;
         }
 
         $output->writeln(sprintf("<info>End</info>"));
+
+        return Command::SUCCESS;
     }
 }

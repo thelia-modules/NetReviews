@@ -4,6 +4,7 @@ namespace NetReviews\Command;
 
 use NetReviews\Model\NetreviewsSiteReviewQuery;
 use NetReviews\NetReviews;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -63,7 +64,7 @@ class GetSiteReviewCommand extends ContainerAwareCommand
 
                 $this->generateGlobalRateSite();
 
-                return 1;
+                return Command::SUCCESS;
 
             } catch (\Exception $e) {
                 NetReviews::log("Site Rewiews ERROR :" . $e->getMessage());
@@ -74,6 +75,8 @@ class GetSiteReviewCommand extends ContainerAwareCommand
             NetReviews::log('Url import site reviews empty');
             $output->writeln(print_r('ERROR --> Url import site reviews empty'));
         }
+
+        return Command::FAILURE;
     }
 
     private function generateGlobalRateSite()
