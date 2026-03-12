@@ -25,7 +25,7 @@ class OrderController extends BaseAdminController
             /** @var OrderService $orderService */
             $orderService = $this->container->get('netreviews.order.service');
 
-            $response = $orderService->sendOrderToNetReviews($orderId);
+            $response = $orderService->sendOrder($orderId);
             $return = $response->return;
 
             if ($return != 1) {

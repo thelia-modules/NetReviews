@@ -33,113 +33,61 @@ class GetProductReviewCommand extends ContainerAwareCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $getReviewMode = NetReviews::getConfigValue('get_review_mode');
+        $apiKey = NetReviews::getConfigValue('api_key');
+        $idWebSite = NetReviews::getConfigValue('id_website');
 
-        switch ($getReviewMode) {
-            case 'api' :
-                $this->executeApiImport($input, $output);
-                break;
-            default:
-                $this->executeFileTransferImport($input, $output);
-                break;
-        }
-    }
+        $apiUrl = "https://api.skeepers.io/v1/reviews/product";
 
-    protected function executeFileTransferImport(InputInterface $input, OutputInterface $output)
-    {
-        /** @var ProductReviewService $productReviewService */
-        $productReviewService = $this->getContainer()->get('netreviews.product_review.service');
-        $idWebsite = NetReviews::getConfigValue('id_website');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/json',
+            'X-Api-Key: ' . $apiKey,
+            'X-Id-Website: ' . $idWebSite
+        ]);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-        $lastImport = NetReviews::getConfigValue(NetReviews::LAST_IMPORT_KEY, (new \DateTime())->getTimestamp());
-        $startDate = \DateTime::createFromFormat('U', $lastImport);
-        $endDate = (new \DateTime());
+        if ($httpCode >= 200 && $httpCode < 300) {
+            $productReviews = json_decode($response);
 
-        $interval = \DateInterval::createFromDateString('1 day');
-        $period = new \DatePeriod($startDate, $interval, $endDate);
-
-        /** @var \DateTime $date */
-        foreach ($period as $date) {
-            $year = $date->format('Y');
-            $month = $date->format('m');
-            $day = $date->format('d');
-            $fileNameFormat = $idWebsite."_".$year.$month.$day;
-            $files  = $productReviewService->getFile("*$fileNameFormat*");
-            foreach ($files as $file) {
-                $contentArray = $productReviewService->xmlToArray($file->getContents());
+            foreach ($productReviews as $productReview) {
                 try {
-                    if (isset($contentArray['review'])) {
-                        //If action key is set at this level this mean we have only one review in file
-                        if (isset($contentArray['review']['action'])) {
-                            $review = $contentArray['review'];
-                            $this->importReview($review);
-                        } else {
-                            //Else we have many review so import all
-                            foreach ($contentArray['review'] as $review) {
-                                $this->importReview($review);
-                            }
-                        }
+                    $netReviewsProductId = $productReview->id_product ?? $productReview->product_reference;
+                    $product = ProductQuery::create()->findOneByRef($netReviewsProductId);
+
+                    if (null === $product) {
+                        continue;
                     }
-                } catch (\Exception $e) {
-                    NetReviews::log("One review was not imported in file $fileNameFormat, error :".$e->getMessage());
-                    $output->writeln($e->getMessage());
-                    $output->writeln(print_r($contentArray));
-                }
-            }
-        }
 
-        NetReviews::setConfigValue(NetReviews::LAST_IMPORT_KEY, (new \DateTime())->getTimestamp());
-    }
+                    $reviewId = $productReview->id_review ?? $productReview->id;
+                    $reviewProductId = $productReview->id_review_product ?? $productReview->id;
 
-    protected function executeApiImport(InputInterface $input, OutputInterface $output)
-    {
-        $productReviewCountUrl = NetReviews::getConfigValue("api_all_products_url");
-        $productReviewCounts = (array) json_decode(file_get_contents($productReviewCountUrl));
-
-        foreach ($productReviewCounts as $productReviewCount) {
-            try {
-
-                $netReviewsProductId = $productReviewCount->id_product;
-                $databaseReviewsCount = NetreviewsProductReviewQuery::create()
-                    ->filterByProductRef($netReviewsProductId)->count();
-
-                if ($databaseReviewsCount === (int) $productReviewCount->nb_reviews) {
-                    continue;
-                }
-
-                $product = ProductQuery::create()->findOneByRef($netReviewsProductId);
-
-                if (null === $product) {
-                    continue;
-                }
-
-                $productReviewsUrl = NetReviews::getConfigValue("api_one_product_url");
-                $productReviewsUrl = str_replace('[id_product]', $netReviewsProductId, $productReviewsUrl);
-                $productReviews = (array) json_decode(file_get_contents($productReviewsUrl));
-
-                foreach ($productReviews as $productReview) {
-                    if (null === $netReview = NetreviewsProductReviewQuery::create()->filterByReviewId($productReview->id_review)->filterByProductReviewId($productReview->id_review_product)->findOne()) {
+                    if (null === $netReview = NetreviewsProductReviewQuery::create()->filterByReviewId($reviewId)->filterByProductReviewId($reviewProductId)->findOne()) {
                         $netReview = new NetreviewsProductReview();
                         $netReview
-                            ->setProductReviewId($productReview->id_review_product)
-                            ->setReviewId($productReview->id_review)
-                            ->setLastname($productReview->lastname)
-                            ->setFirstname($productReview->firstname)
-                            ->setReviewDate($productReview->review_date)
-                            ->setMessage($productReview->review)
-                            ->setRate($productReview->rate)
-                            ->setOrderRef($productReview->order_ref)
-                            ->setProductRef($productReview->id_product)
+                            ->setProductReviewId($reviewProductId)
+                            ->setReviewId($reviewId)
+                            ->setLastname($productReview->customer->lastname ?? $productReview->lastname)
+                            ->setFirstname($productReview->customer->firstname ?? $productReview->firstname)
+                            ->setReviewDate($productReview->date ?? $productReview->review_date)
+                            ->setMessage($productReview->comment ?? $productReview->review)
+                            ->setRate($productReview->rating ?? $productReview->rate)
+                            ->setOrderRef($productReview->order_reference ?? $productReview->order_ref)
+                            ->setProductRef($netReviewsProductId)
                             ->setProductId($product->getId());
                         $netReview->save();
                     }
 
+                    // Gestion des modérations/échanges si présents
                     if (property_exists($productReview, 'moderation')) {
                         foreach ($productReview->moderation as $exchange) {
                             $dateString = substr($exchange->comment_date, 0, strpos($exchange->comment_date, 'T'));
 
                             $exchangeData = NetreviewsProductReviewExchangeQuery::create()
-                                ->filterByProductReviewId($productReview->id_review_product)
+                                ->filterByProductReviewId($reviewProductId)
                                 ->filterByDate($dateString)
                                 ->filterByWho($exchange->comment_origin)
                                 ->findOneOrCreate();
@@ -150,30 +98,12 @@ class GetProductReviewCommand extends ContainerAwareCommand
                         }
                         $netReview->setExchange(1)->save();
                     }
+                } catch (\Exception $e) {
+                    NetReviews::log("One review was not imported with Skeepers API, error : ".$e->getMessage());
                 }
-            } catch (\Exception $e) {
-                NetReviews::log("One review was not imported with api product ref ".$productReviewCount->id_product." error : ".$e->getMessage());
             }
-        }
-    }
-
-    protected function importReview($review)
-    {
-        /** @var ProductReviewService $productReviewService */
-        $productReviewService = $this->getContainer()->get('netreviews.product_review.service');
-
-        switch ($review['action']) {
-            case 'NEW':
-                $productReviewService->createOrUpdateReview($review);
-                break;
-            case 'UPDATE':
-                $productReviewService->createOrUpdateReview($review);
-                break;
-            case 'DELETE':
-                $productReviewService->deleteReview($review);
-                break;
-            default:
-                NetReviews::log("Review action not recognized : " . $review['action']);
+        } else {
+            $output->writeln("<error>Skeepers API Error: $httpCode</error>");
         }
     }
 }

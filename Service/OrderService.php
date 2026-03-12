@@ -16,8 +16,6 @@ use Thelia\Model\ConfigQuery;
 
 class OrderService
 {
-    const DEBUG_API_URL = "www.preprod.avis-verifies.com";
-
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
@@ -30,18 +28,10 @@ class OrderService
         $this->request = $request;
     }
 
-    public function sendOrderToNetReviews($orderId)
+    public function sendOrder($orderId)
     {
+        $apiKey = NetReviews::getConfigValue('api_key');
         $idWebSite = NetReviews::getConfigValue('id_website');
-        $secret = NetReviews::getConfigValue('secret_token');
-
-        $apiUrl = NetReviews::getConfigValue('api_url');
-
-        $debug = NetReviews::getConfigValue('debug_mode', "false");
-
-        if ("true" == $debug) {
-            $apiUrl = self::DEBUG_API_URL;
-        }
 
         $netreviewsOrder = $this->getNetreviewsOrder($orderId);
         $products = [];
@@ -58,46 +48,51 @@ class OrderService
         }
 
         $message = [
-            'query' => 'pushCommandeSHA1',
             'order_ref' => $netreviewsOrder->getRef(),
             'email' => $netreviewsOrder->getEmail(),
             'order_date' => $netreviewsOrder->getDate(),
             'firstname' => $netreviewsOrder->getFirstname(),
             'lastname' => $netreviewsOrder->getLastname(),
             'delay' => $netreviewsOrder->getDelay(),
-            'PRODUCTS' => $products
+            'products' => $products
         ];
 
-        $message['sign'] = SHA1($message['query'].$message['order_ref'].$message['email'].$message['lastname'].$message['firstname'].$message['order_date'].$message['delay'].$secret);
-
-        $fields = http_build_query(
-            [
-                'idWebsite'=> $idWebSite,
-                'message' => $this->acEncodeBase64(json_encode($message)),
-                'type' => 'json'
-            ]
-        );
+        $apiUrl = "https://api.skeepers.io/v1/orders";
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://$apiUrl/index.php?action=act_api_notification_sha1");
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
-        curl_setopt($ch, CURLOPT_POST, count($fields));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-type: application/x-www-form-urlencoded']);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($message));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'X-Api-Key: ' . $apiKey,
+            'X-Id-Website: ' . $idWebSite
+        ]);
         $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        $decodedResponse = json_decode($this->acDecodeBase64($response));
-        $return = $decodedResponse->return;
+        $decodedResponse = json_decode($response);
 
-        if ($return == 1) {
+        if ($httpCode >= 200 && $httpCode < 300) {
             $netreviewsOrderQueue = NetreviewsOrderQueueQuery::create()
                 ->filterByOrderId($orderId)
                 ->findOneOrCreate();
             $netreviewsOrderQueue->setTreatedAt(new \DateTime())
                 ->setStatus('1')
                 ->save();
+            
+            if (!isset($decodedResponse->return)) {
+                $decodedResponse = (object)['return' => 1];
+            }
+        } else {
+             if (!isset($decodedResponse->return)) {
+                $decodedResponse = (object)[
+                    'return' => 0,
+                    'debug' => $response ?: "HTTP Error $httpCode"
+                ];
+            }
         }
 
         return $decodedResponse;
@@ -193,19 +188,5 @@ class OrderService
         $imageEvent->setSourceFilepath($sourceFilePath);
         $imageEvent->setCacheSubdirectory('product');
         return $imageEvent;
-    }
-
-    //------Netreviews methods-----//
-
-    protected function acEncodeBase64($sData)
-    {
-        $sBase64 = base64_encode($sData);
-        return strtr($sBase64, '+/', '‐_');
-    }
-
-    protected function acDecodeBase64($sData)
-    {
-        $sBase64 = strtr($sData, '‐_', '+/');
-        return base64_decode($sBase64);
     }
 }

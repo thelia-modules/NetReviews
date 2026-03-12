@@ -50,7 +50,7 @@ class SendOrderCommand extends ContainerAwareCommand
             foreach ($results as $order) {
                 try {
                     $orderId = $order['order_id'];
-                    $response = $netreviewsOrderService->sendOrderToNetReviews($orderId);
+                    $response = $netreviewsOrderService->sendOrder($orderId);
                     $return = $response->return;
 
                     if ($return != 1) {

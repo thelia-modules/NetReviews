@@ -3,6 +3,8 @@
 return array(
     'API url for all products average rate in json' => 'Url d\'API pour le fichier de note moyenne pour tous les produits ',
     'API url for one product review list in json' => 'Url d\'API pour le fichier de  liste d\'avis par produit',
+    'API Key (Skeepers)' => 'Clé d\'API (Skeepers)',
+    'Use Skeepers New API' => 'Utiliser la nouvelle API Skeepers',
     'Error' => 'Erreur',
     'Footer link' => 'Lien du pied de page',
     'Footer link title' => 'Texte du lien dans le pied de page',

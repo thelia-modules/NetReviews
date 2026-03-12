@@ -23,7 +23,14 @@ composer require thelia/netreviews-module:~1.2.0
 Before any configuration you need to create an account on the netreviews platform.
 
 Then you need to configure this modules here http://yourdomain.com/admin/module/NetReviews
-"Id website" and "Secret token" can be found in your platform account.
+"Id website" and "API Key" can be found in your platform account.
+
+### Skeepers API
+To use the Skeepers API (NetReviews update), you need to:
+1. Provide your **Id website** in the configuration.
+2. Provide your **API Key** (Skeepers) in the configuration.
+
+The endpoints used are `api.skeepers.io/v1/`.
 
 You also need to fill the thelia variable "url_site" here "/admin/configuration/variables" with your domain name.
 

@@ -31,46 +31,46 @@ class GetSiteReviewCommand extends ContainerAwareCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $urlReviews = NetReviews::getConfigValue('site_url_import');
+        $apiKey = NetReviews::getConfigValue('api_key');
+        $idWebSite = NetReviews::getConfigValue('id_website');
 
-        $deleteOldEntries = NetreviewsSiteReviewQuery::create()
-            ->filterByReviewDate(array('max' => date("d-m-Y H:i:s", strtotime('-12 months'))))
-            ->delete();
+        $apiUrl = "https://api.skeepers.io/v1/reviews/site";
 
-        if ($urlReviews) {
-            try {
-                $unparsedJson = file_get_contents($urlReviews);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/json',
+            'X-Api-Key: ' . $apiKey,
+            'X-Id-Website: ' . $idWebSite
+        ]);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-                $tabReviews = json_decode($unparsedJson);
+        if ($httpCode >= 200 && $httpCode < 300) {
+            $tabReviews = json_decode($response);
+            $this->siteReviewService = $this->getContainer()->get('netreviews.site_review.service');
 
-                $this->siteReviewService = $this->getContainer()->get('netreviews.site_review.service');
+            foreach ($tabReviews as $review) {
+                $mappedReview = (object)[
+                    'id_review' => $review->id ?? $review->id_review,
+                    'lastname' => $review->customer->lastname ?? $review->lastname,
+                    'firstname' => $review->customer->firstname ?? $review->firstname,
+                    'review' => $review->comment ?? $review->review,
+                    'review_date' => $review->date ?? $review->review_date,
+                    'rate' => $review->rating ?? $review->rate,
+                    'order_ref' => $review->order_reference ?? $review->order_ref,
+                    'order_date' => $review->order_date ?? $review->order_date,
+                    'state' => '4'
+                ];
 
-                foreach ($tabReviews as $review) {
-                    switch ($review->state) {
-                        case '4':
-                            $this->siteReviewService->addNetreviewsSiteRow($review);
-                            break;
-                        /*case 'UPDATE':
-                            $this->siteReviewService->updateNetreviewsSiteRow($review);
-                            break;
-                        case 'DELETE':
-                            $this->siteReviewService->deleteNetreviewsSiteRow($review);
-                            break;*/
-                        default:
-                            NetReviews::log("Site review action not recognized : " . $review->state);
-                    }
-                }
-
-                $this->generateGlobalRateSite();
-
-            } catch (\Exception $e) {
-                NetReviews::log("Site Rewiews ERROR :" . $e->getMessage());
-                $output->writeln($e->getMessage());
+                $this->siteReviewService->addNetreviewsSiteRow($mappedReview);
             }
 
+            $this->generateGlobalRateSite();
         } else {
-            NetReviews::log('Url import site reviews empty');
-            $output->writeln(print_r('ERROR --> Url import site reviews empty'));
+            $output->writeln("<error>Skeepers API Error: $httpCode</error>");
         }
     }
 

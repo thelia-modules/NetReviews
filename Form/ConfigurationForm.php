@@ -34,22 +34,13 @@ class ConfigurationForm extends BaseForm
                 ]
             )
             ->add(
-                "secret_token",
+                "api_key",
                 "text",
                 [
-                    "data" => NetReviews::getConfigValue("secret_token"),
-                    "label"=>Translator::getInstance()->trans("Secret token", array(), NetReviews::DOMAIN_NAME),
-                    "label_attr" => ["for" => "secret_token"],
+                    "data" => NetReviews::getConfigValue("api_key"),
+                    "label"=>Translator::getInstance()->trans("API Key (Skeepers)", array(), NetReviews::DOMAIN_NAME),
+                    "label_attr" => ["for" => "api_key"],
                     "required" => true
-                ]
-            )
-            ->add(
-                'api_url',
-                'text',
-                [
-                    "data" => NetReviews::getConfigValue("api_url"),
-                    "label"=>Translator::getInstance()->trans("Platform language", array(), NetReviews::DOMAIN_NAME),
-                    "required" => false
                 ]
             )
             ->add(
@@ -91,97 +82,6 @@ class ConfigurationForm extends BaseForm
                 ]
             )
             ->add(
-                "get_review_mode",
-                'choice',
-                [
-                    "data" => NetReviews::getConfigValue("get_review_mode"),
-                    "label"=>Translator::getInstance()->trans("Get review mode", array(), NetReviews::DOMAIN_NAME),
-                    "required" => false,
-                    'choices'  => [
-                        'api'=>'api',
-                        'ftp'=>'ftp',
-                        'local'=>'local'
-                    ]
-                ]
-            )
-            ->add(
-                "review_local_path",
-                "text",
-                [
-                    "data" => NetReviews::getConfigValue("review_local_path"),
-                    "label"=>Translator::getInstance()->trans("Review local path", array(), NetReviews::DOMAIN_NAME),
-                    "label_attr" => ["for" => "review_local_path"],
-                    "required" => false
-                ]
-            )
-            ->add(
-                "api_all_products_url",
-                "text",
-                [
-                    "data" => NetReviews::getConfigValue("api_all_products_url"),
-                    "label"=>Translator::getInstance()->trans("API url for all products average rate in json", array(), NetReviews::DOMAIN_NAME),
-                    "label_attr" => ["for" => "ftp_server"],
-                    "required" => false
-                ]
-            )
-            ->add(
-                "api_one_product_url",
-                "text",
-                [
-                    "data" => NetReviews::getConfigValue("api_one_product_url"),
-                    "label"=>Translator::getInstance()->trans("API url for one product review list in json", array(), NetReviews::DOMAIN_NAME),
-                    "label_attr" => ["for" => "ftp_server"],
-                    "required" => false
-                ]
-            )
-            ->add(
-                "ftp_server",
-                "text",
-                [
-                    "data" => NetReviews::getConfigValue("ftp_server"),
-                    "label"=>Translator::getInstance()->trans("Ftp server", array(), NetReviews::DOMAIN_NAME),
-                    "label_attr" => ["for" => "ftp_server"],
-                    "required" => false
-                ]
-            )
-            ->add(
-                "ftp_username",
-                "text",
-                [
-                    "data" => NetReviews::getConfigValue("ftp_username"),
-                    "label"=>Translator::getInstance()->trans("Ftp username", array(), NetReviews::DOMAIN_NAME),
-                    "label_attr" => ["for" => "ftp_username"],
-                    "required" => false
-                ]
-            )
-            ->add(
-                "ftp_password",
-                "text",
-                [
-                    "data" => NetReviews::getConfigValue("ftp_password"),
-                    "label"=>Translator::getInstance()->trans("Ftp password", array(), NetReviews::DOMAIN_NAME),
-                    "required" => false
-                ]
-            )
-            ->add(
-                "ftp_port",
-                "text",
-                [
-                    "data" => NetReviews::getConfigValue("ftp_port"),
-                    "label"=>Translator::getInstance()->trans("Ftp port", array(), NetReviews::DOMAIN_NAME),
-                    "required" => false
-                ]
-            )
-            ->add(
-                "ftp_directory",
-                "text",
-                [
-                    "data" => NetReviews::getConfigValue("ftp_directory"),
-                    "label"=>Translator::getInstance()->trans("Ftp directory", array(), NetReviews::DOMAIN_NAME),
-                    "required" => false
-                ]
-            )
-            ->add(
                 'product_review_mode',
                 'choice',
                 [
@@ -203,14 +103,6 @@ class ConfigurationForm extends BaseForm
                 ]
             )
             ->add(
-                "site_url_import",
-                "text",
-                [
-                    "data" => NetReviews::getConfigValue("site_url_import"),
-                    "label"=>Translator::getInstance()->trans("Site url import", array(), NetReviews::DOMAIN_NAME)
-                ]
-            )
-            ->add(
                 "product_iframe_code",
                 "text",
                 [
@@ -223,18 +115,6 @@ class ConfigurationForm extends BaseForm
                 'choice',
                 [
                     "data" => NetReviews::getConfigValue("display_product_review_exchanges"),
-                    "required" => false,
-                    'choices'  => [
-                        'true' => 'true',
-                        'false' => 'false'
-                    ]
-                ]
-            )
-            ->add(
-                "debug_mode",
-                'choice',
-                [
-                    "data" => NetReviews::getConfigValue("debug_mode", "false"),
                     "required" => false,
                     'choices'  => [
                         'true' => 'true',
