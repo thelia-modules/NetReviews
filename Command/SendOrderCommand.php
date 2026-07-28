@@ -23,7 +23,7 @@ class SendOrderCommand extends ContainerAwareCommand
             ->setDescription("Send orders from queue to netreviews");
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln(sprintf('<info>Send orders from queue...</info>'));
 

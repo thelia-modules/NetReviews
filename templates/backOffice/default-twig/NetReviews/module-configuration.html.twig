@@ -1,0 +1,237 @@
+{# NetReviews module configuration (BO default-twig). Card-based layout for readability. #}
+{% set d = 'netreviews.bo.default' %}
+{% set f = config_form %}
+{% set product_review_mode = f.product_review_mode.vars.value %}
+{% set get_review_mode = f.get_review_mode.vars.value %}
+
+{% macro cron(command) %}
+    <div class="d-flex align-items-center gap-2 bg-body-secondary border rounded px-2 py-1 mb-3">
+        <i class="bi bi-terminal-fill text-muted"></i>
+        <code class="flex-grow-1 text-body small">{{ command }}</code>
+        <button type="button" class="btn btn-sm btn-outline-secondary js-nr-copy" data-copy="{{ command }}" title="{{ 'Copy'|trans }}">
+            <i class="bi bi-clipboard"></i>
+        </button>
+    </div>
+{% endmacro %}
+{% import _self as ui %}
+
+<form action="{{ path('admin_netreviews_config_save') }}" method="post" class="netreviews-configuration">
+    <input type="hidden" name="{{ attribute(f, '_token').vars.full_name }}" value="{{ attribute(f, '_token').vars.value }}">
+    <input type="hidden" name="{{ f.success_url.vars.full_name }}" value="{{ app.request.requestUri }}">
+    <input type="hidden" name="{{ f.error_url.vars.full_name }}" value="{{ app.request.requestUri }}">
+
+    <div class="row g-4">
+        {# ---- Access ---- #}
+        <div class="col-xl-6">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <i class="bi bi-key-fill text-muted"></i> {{ 'Netreviews access'|trans({}, d) }}
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="id_website">{{ 'Id website'|trans({}, d) }} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="id_website" required name="{{ f.id_website.vars.full_name }}" value="{{ f.id_website.vars.value }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="secret_token">{{ 'Secret token'|trans({}, d) }} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control font-monospace" id="secret_token" required name="{{ f.secret_token.vars.full_name }}" value="{{ f.secret_token.vars.value }}">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 mb-3">
+                            <label class="form-label" for="api_url">{{ 'Platform language :'|trans({}, d) }}</label>
+                            {% set platforms = {
+                                'www.avis-verifies.com': 'FR', 'www.opiniones-verificadas.com': 'ES',
+                                'www.echte-bewertungen.com': 'DE', 'www.recensioni-verificate.com': 'IT',
+                                'www.echte-beoordelingen.com': 'NL', 'www.verified-reviews.co.uk': 'UK',
+                                'www.verified-reviews.com': 'US', 'www.opinioes-verificadas.com.br': 'BR',
+                                'www.opinioes-verificadas.com': 'PT', 'www.opiniones-verificadas.com.co': 'CO',
+                                'www.prawdziwe-opinie.com': 'PL', 'www.opiniones-verificadas.com.mx': 'MX'
+                            } %}
+                            <select id="api_url" name="{{ f.api_url.vars.full_name }}" class="form-select">
+                                {% for value, code in platforms %}
+                                    <option value="{{ value }}"{{ f.api_url.vars.value == value ? ' selected' : '' }}>{{ code }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label class="form-label" for="debug_mode">{{ 'Debug mode :'|trans({}, d) }}</label>
+                            <select id="debug_mode" name="{{ f.debug_mode.vars.full_name }}" class="form-select">
+                                <option value="true"{{ f.debug_mode.vars.value == 'true' ? ' selected' : '' }}>{{ 'Yes'|trans({}, d) }}</option>
+                                <option value="false"{{ f.debug_mode.vars.value != 'true' ? ' selected' : '' }}>{{ 'No'|trans({}, d) }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# ---- Sending orders ---- #}
+        <div class="col-xl-6">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <i class="bi bi-send-fill text-muted"></i> {{ 'Sending orders configuration'|trans({}, d) }}
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="email_delay">{{ 'Reviews email delay (in days):'|trans({}, d) }}</label>
+                        <div class="input-group" style="max-width: 12rem;">
+                            <input type="number" min="0" class="form-control" id="email_delay" name="{{ f.email_delay.vars.full_name }}" value="{{ f.email_delay.vars.value }}">
+                            <span class="input-group-text">{{ 'jours'|trans({}, d) }}</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="status_to_export">{{ 'Order status to export'|trans({}, d) }}</label>
+                        <select id="status_to_export" name="{{ f.status_to_export.vars.full_name }}[]" class="form-select" multiple size="7">
+                            {% for child in f.status_to_export %}
+                                <option value="{{ child.vars.value }}"{{ child.vars.checked ? ' selected' : '' }}>{{ child.vars.label }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text"><i class="bi bi-info-circle"></i> {{ 'Ctrl / ⌘ + clic pour sélectionner plusieurs statuts.'|trans({}, d) }}</div>
+                    </div>
+                    <label class="form-label">{{ 'Add this cron to export order automatically :'|trans({}, d) }}</label>
+                    {{ ui.cron('php Thelia module:NetReviews:SendOrder') }}
+                </div>
+            </div>
+        </div>
+
+        {# ---- Product reviews ---- #}
+        <div class="col-xl-6">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <i class="bi bi-star-fill text-muted"></i> {{ 'Product reviews'|trans({}, d) }}
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="product_review_mode">{{ 'Product review mode :'|trans({}, d) }}</label>
+                        <select id="product_review_mode" name="{{ f.product_review_mode.vars.full_name }}" class="form-select">
+                            <option value="iframe"{{ product_review_mode == 'iframe' ? ' selected' : '' }}>{{ 'Display product review throught the netreviews iframe'|trans({}, d) }}</option>
+                            <option value="custom"{{ product_review_mode == 'custom' ? ' selected' : '' }}>{{ 'Import reviews in database and display it with templates'|trans({}, d) }}</option>
+                        </select>
+                    </div>
+
+                    <div id="product_iframe" class="product_review_mode_form{{ product_review_mode != 'iframe' ? ' d-none' : '' }}">
+                        <div class="mb-3">
+                            <label class="form-label" for="product_iframe_code">{{ 'Product iframe code :'|trans({}, d) }}</label>
+                            <textarea id="product_iframe_code" name="{{ f.product_iframe_code.vars.full_name }}" class="form-control font-monospace small" rows="5">{{ f.product_iframe_code.vars.value }}</textarea>
+                            <div class="form-text">{{ 'Configure Product reviews in netreviews backoffice with these parameters : '|trans({}, d) }}</div>
+                        </div>
+                    </div>
+
+                    <div id="product_custom" class="product_review_mode_form{{ product_review_mode != 'custom' ? ' d-none' : '' }}">
+                        <div class="row">
+                            <div class="col-sm-6 mb-3">
+                                <label class="form-label" for="display_product_review_exchanges">{{ 'Display product review exchanges with the customers'|trans({}, d) }}</label>
+                                <select id="display_product_review_exchanges" name="{{ f.display_product_review_exchanges.vars.full_name }}" class="form-select">
+                                    <option value="true"{{ f.display_product_review_exchanges.vars.value == 'true' ? ' selected' : '' }}>{{ 'Yes'|trans({}, d) }}</option>
+                                    <option value="false"{{ f.display_product_review_exchanges.vars.value != 'true' ? ' selected' : '' }}>{{ 'No'|trans({}, d) }}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <label class="form-label" for="get_review_mode">{{ 'Get review mode :'|trans({}, d) }}</label>
+                                <select id="get_review_mode" name="{{ f.get_review_mode.vars.full_name }}" class="form-select">
+                                    <option value="api"{{ get_review_mode == 'api' ? ' selected' : '' }}>{{ 'Get reviews by API'|trans({}, d) }}</option>
+                                    <option value="ftp"{{ get_review_mode == 'ftp' ? ' selected' : '' }}>{{ 'Download review throught ftp'|trans({}, d) }}</option>
+                                    <option value="local"{{ get_review_mode == 'local' ? ' selected' : '' }}>{{ 'Get file in this server'|trans({}, d) }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="review_api" class="get_review_mode_form{{ get_review_mode != 'api' ? ' d-none' : '' }}">
+                            <div class="mb-3">
+                                <label class="form-label" for="api_all_products_url">{{ 'API url for all products average rate in json'|trans({}, d) }}</label>
+                                <input type="text" class="form-control small" id="api_all_products_url" name="{{ f.api_all_products_url.vars.full_name }}" value="{{ f.api_all_products_url.vars.value }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="api_one_product_url">{{ 'API url for one product review list in json'|trans({}, d) }}</label>
+                                <input type="text" class="form-control small" id="api_one_product_url" name="{{ f.api_one_product_url.vars.full_name }}" value="{{ f.api_one_product_url.vars.value }}">
+                            </div>
+                        </div>
+
+                        <div id="review_ftp" class="get_review_mode_form{{ get_review_mode != 'ftp' ? ' d-none' : '' }}">
+                            <div class="row">
+                                <div class="col-sm-8 mb-3">
+                                    <label class="form-label" for="ftp_server">{{ 'Ftp server'|trans({}, d) }}</label>
+                                    <input type="text" class="form-control" id="ftp_server" name="{{ f.ftp_server.vars.full_name }}" value="{{ f.ftp_server.vars.value }}">
+                                </div>
+                                <div class="col-sm-4 mb-3">
+                                    <label class="form-label" for="ftp_port">{{ 'Ftp port'|trans({}, d) }}</label>
+                                    <input type="text" class="form-control" id="ftp_port" name="{{ f.ftp_port.vars.full_name }}" value="{{ f.ftp_port.vars.value }}">
+                                </div>
+                                <div class="col-sm-6 mb-3">
+                                    <label class="form-label" for="ftp_username">{{ 'Ftp username'|trans({}, d) }}</label>
+                                    <input type="text" class="form-control" id="ftp_username" name="{{ f.ftp_username.vars.full_name }}" value="{{ f.ftp_username.vars.value }}">
+                                </div>
+                                <div class="col-sm-6 mb-3">
+                                    <label class="form-label" for="ftp_password">{{ 'Ftp password'|trans({}, d) }}</label>
+                                    <input type="password" class="form-control" id="ftp_password" name="{{ f.ftp_password.vars.full_name }}" value="{{ f.ftp_password.vars.value }}">
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label class="form-label" for="ftp_directory">{{ 'Ftp directory'|trans({}, d) }}</label>
+                                    <input type="text" class="form-control" id="ftp_directory" name="{{ f.ftp_directory.vars.full_name }}" value="{{ f.ftp_directory.vars.value }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="review_local" class="get_review_mode_form{{ get_review_mode != 'local' ? ' d-none' : '' }}">
+                            <div class="mb-3">
+                                <label class="form-label" for="review_local_path">{{ 'Review local path'|trans({}, d) }}</label>
+                                <input type="text" class="form-control" id="review_local_path" name="{{ f.review_local_path.vars.full_name }}" value="{{ f.review_local_path.vars.value }}">
+                            </div>
+                        </div>
+
+                        <label class="form-label">{{ '2) Add a cron with this command : '|trans({}, d) }}</label>
+                        {{ ui.cron('php Thelia module:NetReviews:GetProductReview') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# ---- Site reviews ---- #}
+        <div class="col-xl-6">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <i class="bi bi-globe2 text-muted"></i> {{ 'Site reviews'|trans({}, d) }}
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="site_widget_code">{{ 'Site widget code :'|trans({}, d) }}</label>
+                        <textarea id="site_widget_code" name="{{ f.site_widget_code.vars.full_name }}" class="form-control font-monospace small" rows="5">{{ f.site_widget_code.vars.value }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="site_url_import">{{ 'Site url import :'|trans({}, d) }}</label>
+                        <textarea id="site_url_import" name="{{ f.site_url_import.vars.full_name }}" class="form-control font-monospace small" rows="2">{{ f.site_url_import.vars.value }}</textarea>
+                    </div>
+                    <label class="form-label">{{ 'Add this cron to import site reviews and calculate average :'|trans({}, d) }}</label>
+                    {{ ui.cron('php Thelia module:NetReviews:GetSiteReview') }}
+                </div>
+            </div>
+        </div>
+
+        {# ---- Footer link ---- #}
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <i class="bi bi-link-45deg text-muted"></i> {{ 'Footer link'|trans({}, d) }}
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label" for="footer_link_title">{{ 'Footer link title'|trans({}, d) }}</label>
+                            <input type="text" class="form-control" id="footer_link_title" name="{{ f.footer_link_title.vars.full_name }}" value="{{ f.footer_link_title.vars.value }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="footer_link">{{ 'Footer link'|trans({}, d) }}</label>
+                            <input type="url" class="form-control" id="footer_link" name="{{ f.footer_link.vars.full_name }}" value="{{ f.footer_link.vars.value }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+        <button type="submit" class="btn btn-primary px-4">
+            <i class="bi bi-check-lg"></i> {{ 'Save'|trans({}, d) }}
+        </button>
+    </div>
+</form>

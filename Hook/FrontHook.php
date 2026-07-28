@@ -1,25 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace NetReviews\Hook;
 
 use NetReviews\NetReviews;
 use NetReviews\Object\NetReviewsProduct;
 use NetReviews\Service\OrderService;
-use Propel\Runtime\Connection\ConnectionWrapper;
-use Propel\Runtime\Propel;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Thelia\Core\Event\Hook\HookRenderBlockEvent;
 use Thelia\Core\Event\Hook\HookRenderEvent;
-use Thelia\Core\Event\Image\ImageEvent;
-use Thelia\Core\Event\TheliaEvents;
 use Thelia\Core\Hook\BaseHook;
-use Thelia\Model\ConfigQuery;
-use Thelia\Model\ProductImage;
 use Thelia\Model\ProductQuery;
 
+/**
+ * Thelia 2 front-office rendering (Smarty hooks). On Thelia 3 the front is rendered by the
+ * theme through NetReviews\Twig\NetReviewsExtension, so every method no-ops when isThelia3().
+ */
 class FrontHook extends BaseHook
 {
-    /** @var  OrderService */
+    /** @var OrderService */
     protected $netreviewsOrderService;
 
     public function __construct(OrderService $netreviewsOrderService)
@@ -29,6 +28,10 @@ class FrontHook extends BaseHook
 
     public function displayTag(HookRenderEvent $event)
     {
+        if (NetReviews::isThelia3()) {
+            return;
+        }
+
         $idWebSite = NetReviews::getConfigValue('id_website');
         $secret = NetReviews::getConfigValue('secret_token');
         $order_id = $event->getArgument('order_id');
@@ -69,6 +72,10 @@ class FrontHook extends BaseHook
 
     public function displaySiteWidget(HookRenderEvent $event)
     {
+        if (NetReviews::isThelia3()) {
+            return;
+        }
+
         $code = NetReviews::getConfigValue('site_widget_code');
 
         $event->add(
@@ -81,6 +88,10 @@ class FrontHook extends BaseHook
 
     public function displayProductIframe(HookRenderEvent $event)
     {
+        if (NetReviews::isThelia3()) {
+            return;
+        }
+
         $code = NetReviews::getConfigValue('product_iframe_code');
 
         $product_ref = $event->getArgument('product_ref');
@@ -98,6 +109,10 @@ class FrontHook extends BaseHook
 
     public function displayFooterLink(HookRenderEvent $event)
     {
+        if (NetReviews::isThelia3()) {
+            return;
+        }
+
         $linkTitle = NetReviews::getConfigValue('footer_link_title');
         $link = NetReviews::getConfigValue('footer_link');
 
@@ -114,6 +129,10 @@ class FrontHook extends BaseHook
 
     public function displayProductTabReview(HookRenderBlockEvent $event)
     {
+        if (NetReviews::isThelia3()) {
+            return;
+        }
+
         $reviewMode = NetReviews::getConfigValue('product_review_mode');
         $content = null;
 
@@ -153,30 +172,5 @@ class FrontHook extends BaseHook
                 );
             }
         }
-    }
-
-    /**
-     * @param string $imageFile
-     * @return ImageEvent
-     */
-    protected function createProductImageEvent($imageFile)
-    {
-        $imageEvent = new ImageEvent();
-        $baseSourceFilePath = ConfigQuery::read('images_library_path');
-        if ($baseSourceFilePath === null) {
-            $baseSourceFilePath = THELIA_LOCAL_DIR . 'media' . DS . 'images';
-        } else {
-            $baseSourceFilePath = THELIA_ROOT . $baseSourceFilePath;
-        }
-        // Put source image file path
-        $sourceFilePath = sprintf(
-            '%s/%s/%s',
-            $baseSourceFilePath,
-            'product',
-            $imageFile
-        );
-        $imageEvent->setSourceFilepath($sourceFilePath);
-        $imageEvent->setCacheSubdirectory('product');
-        return $imageEvent;
     }
 }

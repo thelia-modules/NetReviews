@@ -1,0 +1,51 @@
+{# NetReviews configuration screen behaviour (BO default-twig, vanilla JS). #}
+<script>
+(function () {
+    'use strict';
+
+    document.addEventListener('DOMContentLoaded', function () {
+        function toggle(selectId, groupClass, prefix) {
+            var select = document.getElementById(selectId);
+            if (!select) {
+                return;
+            }
+            var apply = function () {
+                document.querySelectorAll('.' + groupClass).forEach(function (el) {
+                    el.classList.add('d-none');
+                });
+                var target = document.getElementById(prefix + select.value);
+                if (target) {
+                    target.classList.remove('d-none');
+                }
+            };
+            select.addEventListener('change', apply);
+        }
+
+        toggle('product_review_mode', 'product_review_mode_form', 'product_');
+        toggle('get_review_mode', 'get_review_mode_form', 'review_');
+
+        /* Copy cron commands to the clipboard. */
+        document.addEventListener('click', function (e) {
+            var btn = e.target.closest('.js-nr-copy');
+            if (!btn) {
+                return;
+            }
+            var text = btn.dataset.copy || '';
+            var done = function () {
+                var icon = btn.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('bi-clipboard');
+                    icon.classList.add('bi-clipboard-check');
+                    setTimeout(function () {
+                        icon.classList.remove('bi-clipboard-check');
+                        icon.classList.add('bi-clipboard');
+                    }, 1500);
+                }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(done).catch(function () {});
+            }
+        });
+    });
+}());
+</script>
