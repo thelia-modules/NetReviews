@@ -7,16 +7,14 @@ namespace NetReviews\Controller;
 use NetReviews\Form\SendOrderForm;
 use NetReviews\NetReviews;
 use NetReviews\Service\OrderService;
-use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Core\Translation\Translator;
 
-#[Route('/admin/module/netreviews/order', name: 'netreviews_order')]
+// Route declared in Config/routing.xml (registers on both Thelia 2 and Thelia 3).
 class OrderController extends BaseAdminController
 {
-    #[Route('/{orderId}', name: '_send', methods: ['POST'], requirements: ['orderId' => '\d+'])]
     public function sendAction($orderId, OrderService $orderService)
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'NetReviews', AccessManager::VIEW)) {
