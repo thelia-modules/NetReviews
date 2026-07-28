@@ -30,7 +30,7 @@ class GetSiteReviewCommand extends ContainerAwareCommand
             );
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $urlReviews = NetReviews::getConfigValue('site_url_import');
 

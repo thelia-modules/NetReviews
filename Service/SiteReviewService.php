@@ -2,7 +2,7 @@
 
 namespace NetReviews\Service;
 
-use NetReviews\Model\Base\NetreviewsSiteReviewQuery;
+use NetReviews\Model\NetreviewsSiteReviewQuery;
 use NetReviews\Model\NetreviewsSiteReview;
 use NetReviews\NetReviews;
 use Propel\Runtime\ActiveQuery\Criteria;

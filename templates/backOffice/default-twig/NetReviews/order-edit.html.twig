@@ -1,0 +1,19 @@
+{# "Send order to NetReviews" panel at the bottom of the order edit screen. Ported from order-bottom.html. #}
+{% set d = 'netreviews.bo.default' %}
+
+<div class="card mt-3">
+    <div class="card-header">{{ 'Send order to NetReviews'|trans({}, d) }}</div>
+    <div class="card-body">
+        <form action="{{ path('netreviews_order_send', {orderId: order_id}) }}" method="post">
+            <input type="hidden" name="{{ attribute(send_order_form, '_token').vars.full_name }}" value="{{ attribute(send_order_form, '_token').vars.value }}">
+            <input type="hidden" name="{{ send_order_form.success_url.vars.full_name }}" value="{{ app.request.requestUri }}">
+            {% if treated_at %}
+                <button type="submit" class="btn btn-outline-secondary">
+                    {{ 'Order sent on %date% at %time%, click here to send again'|trans({'%date%': treated_at|date('Y-m-d'), '%time%': treated_at|date('H:i')}, d) }}
+                </button>
+            {% else %}
+                <button type="submit" class="btn btn-success">{{ 'Send'|trans({}, d) }}</button>
+            {% endif %}
+        </form>
+    </div>
+</div>

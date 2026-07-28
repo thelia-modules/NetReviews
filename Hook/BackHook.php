@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace NetReviews\Hook;
 
 use NetReviews\Model\NetreviewsOrderQueueQuery;
@@ -11,6 +13,10 @@ class BackHook extends BaseHook
 {
     public function onModuleConfigure(HookRenderEvent $event)
     {
+        if (NetReviews::isThelia3()) {
+            return; // Thelia 3: handled by NetReviews\Hook\Back\ConfigurationHook (Twig).
+        }
+
         $event->add($this->render(
             "netreviews/configuration.html",
             [
@@ -22,6 +28,10 @@ class BackHook extends BaseHook
 
     public function onModuleConfigureJs(HookRenderEvent $event)
     {
+        if (NetReviews::isThelia3()) {
+            return; // Thelia 3: handled by NetReviews\Hook\Back\ConfigurationHook (Twig).
+        }
+
         $event->add($this->render(
             "netreviews/configuration-js.html",
         ));
@@ -29,6 +39,10 @@ class BackHook extends BaseHook
 
     public function onOrderEditBottom(HookRenderEvent $event)
     {
+        if (NetReviews::isThelia3()) {
+            return; // Thelia 3: handled by NetReviews\Hook\Back\OrderEditHook (Twig).
+        }
+
         $orderId = $event->getArgument('order_id');
 
         $params =  ['order_id' => $orderId];

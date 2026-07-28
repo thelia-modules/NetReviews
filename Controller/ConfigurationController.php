@@ -1,25 +1,22 @@
 <?php
 
+declare(strict_types=1);
 
 namespace NetReviews\Controller;
 
 use NetReviews\Form\ConfigurationForm;
 use NetReviews\NetReviews;
+use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Core\Translation\Translator;
-use Symfony\Component\Routing\Annotation\Route;
+use Thelia\Tools\URL;
 
-/**
- * @Route("/admin/module/netreviews", name="admin_netreviews_config")
- */
+#[Route('/admin/module/netreviews', name: 'admin_netreviews_config')]
 class ConfigurationController extends BaseAdminController
 {
-
-    /**
-     * @Route("/configuration", name="_save", methods="POST")
-     */
+    #[Route('/configuration', name: '_save', methods: ['POST'])]
     public function saveAction()
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'NetReviews', AccessManager::VIEW)) {
@@ -55,7 +52,9 @@ class ConfigurationController extends BaseAdminController
                 $e->getMessage(),
                 $form
             );
-            return $this->viewAction();
+
+            return $this->generateErrorRedirect($form)
+                ?? $this->generateRedirect(URL::getInstance()->absoluteUrl('/admin/module/NetReviews'));
         }
 
         return $this->generateSuccessRedirect($form);

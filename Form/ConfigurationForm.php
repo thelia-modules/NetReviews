@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace NetReviews\Form;
 
 use NetReviews\NetReviews;
@@ -247,7 +249,7 @@ class ConfigurationForm extends BaseForm
         ;
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return "netreviews_configuration_form";
     }
