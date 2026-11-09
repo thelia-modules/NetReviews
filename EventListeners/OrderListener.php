@@ -15,6 +15,10 @@ use Thelia\Model\OrderStatus;
 
 class OrderListener implements EventSubscriberInterface
 {
+    // The status column is a VARCHAR, and this file runs in strict types: an int is refused
+    // (TypeError), which aborted the whole order status update, shipment included.
+    private const STATUS_PENDING = '0';
+
     public static function getSubscribedEvents()
     {
         return [
@@ -33,7 +37,7 @@ class OrderListener implements EventSubscriberInterface
         if (in_array($event->getPlacedOrder()->getStatusId(), $statusToExport, false)){
             $netReviewsOrderQueue = new NetreviewsOrderQueue();
             $netReviewsOrderQueue->setOrderId($event->getPlacedOrder()->getId())
-                ->setStatus(0)
+                ->setStatus(self::STATUS_PENDING)
                 ->save();
         }
     }
@@ -60,7 +64,7 @@ class OrderListener implements EventSubscriberInterface
         } else if (in_array($newStatus, $statusToExport, false)){
             $netReviewsOrderQueue = new NetreviewsOrderQueue();
             $netReviewsOrderQueue->setOrderId($orderId)
-                ->setStatus(0)
+                ->setStatus(self::STATUS_PENDING)
                 ->save();
         }
     }
